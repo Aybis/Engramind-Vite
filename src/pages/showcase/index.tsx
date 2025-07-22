@@ -24,8 +24,8 @@ import { settingNickname } from "../../stores/user-slice";
 export type FlatFormValues = Record<string, any>;
 
 export default function ScenariosPage() {
-  const principal = Cookies.get("principal");
-  const userNickname = Cookies.get("nickname");
+  const email = Cookies.get("email");
+  const username = Cookies.get("name");
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [loading] = useState(false);
@@ -40,13 +40,11 @@ export default function ScenariosPage() {
 
   const { nickname } = useSelector((state: any) => state.user);
 
-  const [currentNickname, setCurrentNickname] = useState(
-    nickname || userNickname
-  );
+  const [currentNickname, setCurrentNickname] = useState(nickname || username);
   const navigate = useNavigate();
 
   const { data: totalScenariosData } = useSWR(
-    `/quick-roleplay/all/${principal}`,
+    `/quick-roleplay/all/${email}`,
     fetcherBackend
   );
 

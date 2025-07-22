@@ -19,7 +19,7 @@ export const UploadFileForm = ({
   setLoading,
   filesMutate,
 }: UploadFileForm) => {
-  const principal = Cookies.get("principal");
+  const email = Cookies.get("email");
   const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string>("");
 
@@ -34,7 +34,7 @@ export const UploadFileForm = ({
     if (!file) return;
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("organization_id", principal ?? "");
+    formData.append("organization_id", email ?? "");
     try {
       setLoading(true);
       const response = await axiosBackend.post("/files/create", formData);

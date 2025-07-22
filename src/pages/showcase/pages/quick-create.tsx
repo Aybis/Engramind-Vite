@@ -31,7 +31,7 @@ import { toast } from "sonner";
 import Cookies from "js-cookie";
 
 export default function ShowcaseQuickCreatePage() {
-  const principal = Cookies.get("principal");
+  const email = Cookies.get("email");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
@@ -40,7 +40,7 @@ export default function ShowcaseQuickCreatePage() {
     string | null
   >(null);
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/files/all/${principal}`,
+    `/files/all/${email}`,
     fetcherBackend
   );
 
@@ -60,7 +60,7 @@ export default function ShowcaseQuickCreatePage() {
           ai_role: values.ai_role,
           my_role: values.my_role,
           scenario_description: values.scenario_description,
-          organization_id: principal,
+          organization_id: email,
           file_ids: fileIdsTemp,
         });
         setShowLoadingProgress(true);

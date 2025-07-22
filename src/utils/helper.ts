@@ -277,3 +277,12 @@ export const formatNickname = (userNickname?: string) => {
     return userNickname;
   }
 };
+
+export function cleanErrorMessage(message?: string): string {
+  try {
+    if (!message) return "";
+    return message?.replace(/^\w*Exception:\s*/, "");
+  } catch (e) {
+    return message ?? "";
+  }
+}

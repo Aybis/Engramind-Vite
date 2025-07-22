@@ -35,7 +35,7 @@ import Cookies from "js-cookie";
 import { JobStatus } from "../../../utils/helper";
 
 export default function ShowcaseAdvanceCreatePage() {
-  const principal = Cookies.get("principal");
+  const email = Cookies.get("email");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<PersonaData | null>(
@@ -57,19 +57,19 @@ export default function ShowcaseAdvanceCreatePage() {
   const [showLoadingProgress, setShowLoadingProgress] = useState(false);
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/files/all/${principal}`,
+    `/files/all/${email}`,
     fetcherBackend
   );
   const { data: totalPersonaData } = useSWR(
-    `persona/all/${principal}`,
+    `persona/all/${email}`,
     fetcherBackend
   );
   const { data: totalRubricsData } = useSWR(
-    `/rubrics/all/${principal}`,
+    `/rubrics/all/${email}`,
     fetcherBackend
   );
   const { data: totalGlossaryData } = useSWR(
-    `/glossary/all/${principal}`,
+    `/glossary/all/${email}`,
     fetcherBackend
   );
 
@@ -91,7 +91,7 @@ export default function ShowcaseAdvanceCreatePage() {
           persona_id: values.persona,
           rubric_id: values.rubrics,
           scenario_description: values.scenario_description,
-          organization_id: principal,
+          organization_id: email,
           file_ids: fileIdsTemp,
         });
         setShowLoadingProgress(true);

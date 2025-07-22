@@ -17,17 +17,15 @@ import { resetState, settingNickname } from "../../stores/user-slice";
 import Cookies from "js-cookie";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const principal = Cookies.get("principal");
-  const userNickname = Cookies.get("nickname");
+  const email = Cookies.get("email");
+  const username = Cookies.get("name");
   const dispatch = useDispatch();
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [showUpdateNickname, setShowUpdateNickname] = useState(false);
   const { nickname } = useSelector((state: any) => state.user);
 
-  const [currentNickname, setCurrentNickname] = useState(
-    nickname || userNickname
-  );
+  const [currentNickname, setCurrentNickname] = useState(nickname || username);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -64,8 +62,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         .replace(/^ +/, "")
         .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
-    Cookies.set("principal", "");
-    Cookies.set("nickname", "");
+    Cookies.set("access_token", "");
+    Cookies.set("name", "");
+    Cookies.set("refresh_token", "");
+    Cookies.set("email", "");
     dispatch(resetState());
     navigate("/");
   };
@@ -85,7 +85,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           setShowUpdateNickname={setShowUpdateNickname}
           setShowConfirm={setShowConfirm}
           setIsOpenDrawer={setIsOpenDrawer}
-          name={principal ?? ""}
+          name={email ?? ""}
           currentNickname={currentNickname}
         />
         <div className="max-w-7xl mx-auto px-4 py-10 text-neutral-900 dark:text-neutral-100">
@@ -144,7 +144,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col gap-4 items-start mt-[20px] relative">
           <div className="flex gap-x-2 justify-center items-center">
             <img
-              onClick={() => setShowUpdateNickname(true)}
+              // onClick={() => setShowUpdateNickname(true)}
               src="/assets/male_persona.avif"
               alt="Profile"
               className="rounded-full w-8 h-8 cursor-pointer hover:shadow-lg transition-all duration-300"
@@ -152,7 +152,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               height={300}
             />
             <div
-              onClick={() => setShowUpdateNickname(true)}
+              // onClick={() => setShowUpdateNickname(true)}
               className="text-sm cursor-pointer text-purple-600 dark:text-purple-300 capitalize font-semibold"
             >
               {formatNickname(currentNickname)}

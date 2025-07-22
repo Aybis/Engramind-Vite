@@ -21,12 +21,12 @@ import { JobStatus } from "../../../utils/helper";
 export type FlatFormValues = Record<string, any>;
 
 export default function FileManagementPage() {
-  const principal = Cookies.get("principal");
+  const email = Cookies.get("email");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/files/all/${principal}`,
+    `/files/all/${email}`,
     fetcherBackend
   );
 

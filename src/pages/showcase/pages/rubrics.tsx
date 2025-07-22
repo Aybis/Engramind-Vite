@@ -32,8 +32,8 @@ import Cookies from "js-cookie";
 export type FlatFormValues = Record<string, any>;
 
 export default function RubricsPage() {
-  const principal = Cookies.get("principal");
-  const userNickname = Cookies.get("nickname");
+  const email = Cookies.get("email");
+  const username = Cookies.get("name");
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditRubrics, setIsOpenEditRubrics] = useState(false);
   const [isOpenRubricsDetail, setIsOpenRubricsDetail] =
@@ -45,11 +45,9 @@ export default function RubricsPage() {
   const [uploading, setUploading] = useState(false);
   const [rubricId, setRubricId] = useState("");
   const { nickname } = useSelector((state: any) => state.user);
-  const [currentNickname, setCurrentNickname] = useState(
-    nickname || userNickname
-  );
+  const [currentNickname, setCurrentNickname] = useState(nickname || username);
   const { data: totalRubricsData, mutate: rubricsMutate } = useSWR(
-    `/rubrics/all/${principal}`,
+    `/rubrics/all/${email}`,
     fetcherBackend
   );
   const totalRubricsResult: Assessment[] = totalRubricsData?.data;
@@ -76,7 +74,7 @@ export default function RubricsPage() {
         const response = await axiosBackend.post("/rubrics/create", {
           name: values.name,
           description: values.description,
-          organization_id: principal,
+          organization_id: email,
           file_ids: fileIdsTemp,
         });
         const jobResponse = response.data as JobResponse;

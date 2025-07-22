@@ -54,7 +54,7 @@ export const ShowcaseHeader = (
           <div className="text-sm text-purple-600 dark:text-purple-300 capitalize font-semibold">
             Hi,{" "}
             <button
-              onClick={() => setShowUpdateNickname(true)}
+              // onClick={() => setShowUpdateNickname(true)}
               type="button"
               className="cursor-pointer"
             >
@@ -63,7 +63,7 @@ export const ShowcaseHeader = (
           </div>
           <BellDot className="cursor-pointer text-purple-600 dark:text-purple-400 md:block hidden" />
           <img
-            onClick={() => setShowUpdateNickname(true)}
+            // onClick={() => setShowUpdateNickname(true)}
             src="/assets/male_persona.avif"
             alt="Profile"
             className="rounded-full w-8 h-8 cursor-pointer hover:shadow-lg transition-all duration-300"

@@ -26,8 +26,8 @@ import Cookies from "js-cookie";
 export type FlatFormValues = Record<string, any>;
 
 export default function GlossaryPage() {
-  const principal = Cookies.get("principal");
-  const userNickname = Cookies.get("nickname");
+  const email = Cookies.get("email");
+  const username = Cookies.get("name");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedGlossary, setSelectedGlossary] = useState<GlossaryData | null>(
@@ -37,12 +37,10 @@ export default function GlossaryPage() {
     useState<boolean>(false);
 
   const { nickname } = useSelector((state: any) => state.user);
-  const [currentNickname, setCurrentNickname] = useState(
-    nickname || userNickname
-  );
+  const [currentNickname, setCurrentNickname] = useState(nickname || username);
 
   const { data: totalGlossaryData, mutate: glossaryMutate } = useSWR(
-    `/glossary/all/${principal}`,
+    `/glossary/all/${email}`,
     fetcherBackend
   );
 
@@ -148,7 +146,7 @@ export default function GlossaryPage() {
           name: values.name,
           glossary: values.content,
           ...(values.createOrUpdate === "create" && {
-            organization_id: principal,
+            organization_id: email,
           }),
           ...(values.createOrUpdate === "update" && {
             id: selectedGlossary?.id,

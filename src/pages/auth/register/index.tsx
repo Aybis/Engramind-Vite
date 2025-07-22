@@ -3,6 +3,9 @@
 import Navbar from "../../../components/layout/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { axiosBackend } from "../../../utils/api";
+import { toast } from "sonner";
+import { cleanErrorMessage } from "../../../utils/helper";
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
@@ -16,22 +19,35 @@ export const RegisterPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    const toastId = toast.loading(`Registering...`, {
+      id: "register",
+      duration: Infinity,
+    });
     try {
-      const res = await fetch("/api/user/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+      const response = await axiosBackend.post("/users/register", {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        method: "email-password",
       });
-
-      const result = await res.json();
-      if (result.success) {
-        navigate("/auth/register/ai");
+      const result = response.data;
+      if (result?.success) {
+        toast.success(`Successfully registered!`, {
+          id: toastId,
+          duration: 4000,
+        });
+        navigate("/auth/login");
       } else {
-        alert(result.message || "Registration failed");
+        toast.error(cleanErrorMessage(result?.message), {
+          id: toastId,
+          duration: 4000,
+        });
       }
     } catch (error) {
-      console.log(error, "<<< error");
-      alert("Something went wrong. Please try again.");
+      toast.error(`Something went wrong. ${error?.toString()}`, {
+        id: toastId,
+        duration: 4000,
+      });
     } finally {
       setLoading(false);
     }
@@ -81,7 +97,7 @@ export const RegisterPage = () => {
 
             <button
               type="submit"
-              className="w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 rounded-md transition text-center"
+              className="w-full cursor-pointer bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 rounded-md transition text-center"
               disabled={loading}
             >
               {loading ? "Registering..." : "Continue"}

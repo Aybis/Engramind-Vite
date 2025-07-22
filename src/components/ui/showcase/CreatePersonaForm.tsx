@@ -26,11 +26,11 @@ export const CreatePersonaForm = ({
   uploading,
   setUploading,
 }: CreatePersonaForm) => {
-  const principal = Cookies.get("principal");
+  const email = Cookies.get("email");
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/files/all/${principal}`,
+    `/files/all/${email}`,
     fetcherBackend
   );
 

@@ -31,8 +31,8 @@ import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
 export default function PersonaPage() {
-  const principal = Cookies.get("principal");
-  const userNickname = Cookies.get("nickname");
+  const email = Cookies.get("email");
+  const username = Cookies.get("name");
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditPersona, setIsOpenEditPersona] = useState(false);
   const [isOpenPersonaDetails, setIsOpenPersonaDetails] = useState(false);
@@ -42,11 +42,9 @@ export default function PersonaPage() {
     null
   );
   const { nickname } = useSelector((state: any) => state.user);
-  const [currentNickname, setCurrentNickname] = useState(
-    nickname || userNickname
-  );
+  const [currentNickname, setCurrentNickname] = useState(nickname || username);
   const { data: totalPersonaData, mutate: personaMutate } = useSWR(
-    `persona/all/${principal}`,
+    `persona/all/${email}`,
     fetcherBackend
   );
   const totalPersonaResult: PersonaData[] = totalPersonaData?.data;
@@ -108,7 +106,7 @@ export default function PersonaPage() {
         const response = await axiosBackend.post("/persona/create", {
           name: values.name,
           persona_prompt: values.personaPrompt,
-          organization_id: principal,
+          organization_id: email,
           file_ids: fileIdsTemp,
         });
         const jobResponse = response.data as JobResponse;

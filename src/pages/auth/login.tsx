@@ -4,6 +4,9 @@ import Navbar from "../../components/layout/Navbar";
 import { Mail } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { axiosBackend } from "../../utils/api";
+import Cookies from "js-cookie";
 
 interface EmailInputProps {
   form: { email: string; password: string };
@@ -83,22 +86,37 @@ const LoginCard = () => {
 
   const handleLogin = async () => {
     setLoading(true);
+    const toastId = toast.loading(`Logging in...`, {
+      id: "login",
+      duration: Infinity,
+    });
     try {
-      const res = await fetch("/api/user/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+      const response = await axiosBackend.post("/users/login", {
+        email: form.email,
+        password: form.password,
       });
-
-      const result = await res.json();
-      if (result.success) {
+      const result = response.data;
+      if (result?.success) {
+        Cookies.set("access_token", result?.accessToken);
+        Cookies.set("name", result?.name);
+        Cookies.set("refresh_token", result?.refreshToken);
+        Cookies.set("email", result?.email);
+        toast.success(`Successfully logged in!`, {
+          id: toastId,
+          duration: 4000,
+        });
         navigate("/showcase");
       } else {
-        alert(result.message || "Login failed");
+        toast.error(result?.message, {
+          id: toastId,
+          duration: 4000,
+        });
       }
     } catch (error) {
-      console.log(error, "<<< error");
-      alert("Something went wrong.");
+      toast.error(`Something went wrong. ${error?.toString()}`, {
+        id: toastId,
+        duration: 4000,
+      });
     } finally {
       setLoading(false);
     }

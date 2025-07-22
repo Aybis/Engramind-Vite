@@ -27,10 +27,10 @@ export const CreateRubricForm = ({
   setUploading,
 }: CreateRubricForm) => {
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
-  const principal = Cookies.get("principal");
+  const email = Cookies.get("email");
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/files/all/${principal}`,
+    `/files/all/${email}`,
     fetcherBackend
   );
 
