@@ -21,45 +21,54 @@ import { FourthAIPage } from "./pages/auth/register/ai/fourth";
 import { FifthAIPage } from "./pages/auth/register/ai/fifth";
 import { SixthAIPage } from "./pages/auth/register/ai/sixth";
 import { SeventhAIPage } from "./pages/auth/register/ai/seventh";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
+import { LoggedInRoute } from "./routes/LoggedInRoute";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Home Page */}
-        <Route path="/" element={<LandingPage />} />
-        {/* Auth Page */}
-        <Route path="/auth/login" element={<LoginPage />} />
-        <Route path="/auth/register" element={<RegisterPage />} />
-        <Route path="/auth/register/ai" element={<FirstAIPage />} />
-        <Route path="/auth/register/ai/second" element={<SecondAIPage />} />
-        <Route path="/auth/register/ai/third" element={<ThirdAIPage />} />
-        <Route path="/auth/register/ai/fourth" element={<FourthAIPage />} />
-        <Route path="/auth/register/ai/fifth" element={<FifthAIPage />} />
-        <Route path="/auth/register/ai/sixth" element={<SixthAIPage />} />
-        <Route path="/auth/register/ai/seventh" element={<SeventhAIPage />} />
-        {/* Showcase Page */}
-        <Route path="/showcase" element={<ShowcasePage />} />
-        <Route
-          path="/showcase/roleplay/quick-create"
-          element={<ShowcaseQuickCreatePage />}
-        />
-        <Route
-          path="/showcase/roleplay/advance-create"
-          element={<ShowcaseAdvanceCreatePage />}
-        />
-        <Route path="/showcase/how-it-works" element={<ShowcaseHowItWorks />} />
-        <Route path="/showcase/faq" element={<ShowcaseFaq />} />
-        <Route path="/showcase/roleplay/:id" element={<RoleplayDetail />} />
-        <Route path="/showcase/rubrics" element={<RubricsPage />} />
-        <Route path="/showcase/glossary" element={<GlossaryPage />} />
-        <Route path="/showcase/persona" element={<PersonaPage />} />
-        <Route
-          path="/showcase/file-management"
-          element={<FileManagementPage />}
-        />
-        {/* Dashboard Page */}
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route element={<LoggedInRoute />}>
+          {/* Home Page */}
+          <Route path="/" element={<LandingPage />} />
+          {/* Auth Page */}
+          <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="/auth/register" element={<RegisterPage />} />
+        </Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/auth/register/ai" element={<FirstAIPage />} />
+          <Route path="/auth/register/ai/second" element={<SecondAIPage />} />
+          <Route path="/auth/register/ai/third" element={<ThirdAIPage />} />
+          <Route path="/auth/register/ai/fourth" element={<FourthAIPage />} />
+          <Route path="/auth/register/ai/fifth" element={<FifthAIPage />} />
+          <Route path="/auth/register/ai/sixth" element={<SixthAIPage />} />
+          <Route path="/auth/register/ai/seventh" element={<SeventhAIPage />} />
+          {/* Showcase Page */}
+          <Route path="/showcase" element={<ShowcasePage />} />
+          <Route
+            path="/showcase/roleplay/quick-create"
+            element={<ShowcaseQuickCreatePage />}
+          />
+          <Route
+            path="/showcase/roleplay/advance-create"
+            element={<ShowcaseAdvanceCreatePage />}
+          />
+          <Route
+            path="/showcase/how-it-works"
+            element={<ShowcaseHowItWorks />}
+          />
+          <Route path="/showcase/faq" element={<ShowcaseFaq />} />
+          <Route path="/showcase/roleplay/:id" element={<RoleplayDetail />} />
+          <Route path="/showcase/rubrics" element={<RubricsPage />} />
+          <Route path="/showcase/glossary" element={<GlossaryPage />} />
+          <Route path="/showcase/persona" element={<PersonaPage />} />
+          <Route
+            path="/showcase/file-management"
+            element={<FileManagementPage />}
+          />
+          {/* Dashboard Page */}
+          <Route path="/dashboard" element={<DashboardPage />} />
+        </Route>
       </Routes>
     </Router>
   );
