@@ -98,7 +98,7 @@ export const RegisterPage = () => {
             <button
               type="submit"
               className="w-full cursor-pointer bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 rounded-md transition text-center"
-              disabled={loading}
+              disabled={loading || !form.password || !form.email || !form.name}
             >
               {loading ? "Registering..." : "Continue"}
             </button>

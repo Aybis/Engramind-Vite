@@ -132,7 +132,7 @@ const LoginCard = () => {
       <EmailInput form={form} handleChange={handleChange} />
       <button
         onClick={handleLogin}
-        disabled={loading}
+        disabled={loading || !form?.email || !form?.password}
         className="w-full bg-purple-500 cursor-pointer hover:bg-purple-600 text-white font-semibold py-2 rounded-md mb-4 transition text-center"
       >
         {loading ? "Logging in..." : "Continue"}
