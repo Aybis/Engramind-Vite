@@ -124,21 +124,22 @@ export default function ScenariosPage() {
         <SearchBar title="Roleplay" showRoleOption />
         <CategoryFilter />
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 h-full">
-          {totalScenariosResult?.map(
-            (item: RoleplayResponse, index: number) => (
-              <ScenarioCard
-                key={item.id}
-                item={item}
-                index={index}
-                setOpenPopoverIndex={setOpenPopoverIndex}
-                openPopoverIndex={openPopoverIndex}
-                handleCreateConversation={handleCreateConversation}
-                onRoleplaySelected={(item: RoleplayResponse) =>
-                  handleClickRoleplay(item)
-                }
-              />
-            )
-          )}
+          {totalScenariosResult &&
+            totalScenariosResult?.map(
+              (item: RoleplayResponse, index: number) => (
+                <ScenarioCard
+                  key={item.id}
+                  item={item}
+                  index={index}
+                  setOpenPopoverIndex={setOpenPopoverIndex}
+                  openPopoverIndex={openPopoverIndex}
+                  handleCreateConversation={handleCreateConversation}
+                  onRoleplaySelected={(item: RoleplayResponse) =>
+                    handleClickRoleplay(item)
+                  }
+                />
+              )
+            )}
         </div>
         <AnimatedModal
           widthFitContainer
