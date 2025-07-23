@@ -97,10 +97,10 @@ const LoginCard = () => {
       });
       const result = response.data;
       if (result?.success) {
-        Cookies.set("access_token", result?.accessToken);
-        Cookies.set("name", result?.name);
-        Cookies.set("refresh_token", result?.refreshToken);
-        Cookies.set("email", result?.email);
+        Cookies.set("access_token", result?.accessToken, { expires: 1 });
+        Cookies.set("name", result?.name, { expires: 1 });
+        Cookies.set("refresh_token", result?.refreshToken, { expires: 1 });
+        Cookies.set("email", result?.email, { expires: 1 });
         toast.success(`Successfully logged in!`, {
           id: toastId,
           duration: 4000,

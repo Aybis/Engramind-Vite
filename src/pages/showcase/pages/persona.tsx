@@ -44,7 +44,7 @@ export default function PersonaPage() {
   const { nickname } = useSelector((state: any) => state.user);
   const [currentNickname, setCurrentNickname] = useState(nickname || username);
   const { data: totalPersonaData, mutate: personaMutate } = useSWR(
-    `persona/all/${email}`,
+    `/persona/all/${email}`,
     fetcherBackend
   );
   const totalPersonaResult: PersonaData[] = totalPersonaData?.data;
