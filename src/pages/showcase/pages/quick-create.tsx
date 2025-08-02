@@ -67,31 +67,31 @@ export default function ShowcaseQuickCreatePage() {
         const [scenarioPda] = PublicKey.findProgramAddressSync(
           [
             publicKey?.toBuffer() ?? Buffer.from(""),
-            Buffer.from(values.scenario_title),
+            Buffer.from(values.scenario_title.trim()),
             Buffer.from(currentTimestamp),
           ],
           programId
         );
         await program?.methods
           ?.createScenario(
-            values.scenario_title,
-            values.scenario_description,
+            values.scenario_title.trim(),
+            values.scenario_description.trim(),
             currentTimestamp
           )
           .accounts({
             persona: scenarioPda,
-            title: values.scenario_title,
-            description: values.scenario_description,
+            title: values.scenario_title.trim(),
+            description: values.scenario_description.trim(),
             timestamp: currentTimestamp,
             systemProgram: SystemProgram.programId,
           })
           .rpc();
         const fileIdsTemp = values.files.map((x: FileResponse) => x.file_id);
         const response = await axiosBackend.post("/quick-roleplay/create", {
-          scenario_title: values.scenario_title,
-          ai_role: values.ai_role,
-          my_role: values.my_role,
-          scenario_description: values.scenario_description,
+          scenario_title: values.scenario_title.trim(),
+          ai_role: values.ai_role.trim(),
+          my_role: values.my_role.trim(),
+          scenario_description: values.scenario_description.trim(),
           organization_id: publicKey?.toBase58(),
           file_ids: fileIdsTemp,
         });

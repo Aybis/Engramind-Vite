@@ -133,17 +133,21 @@ export default function GlossaryPage() {
         const [rubricsPda] = PublicKey.findProgramAddressSync(
           [
             publicKey?.toBuffer() ?? Buffer.from(""),
-            Buffer.from(values.name),
+            Buffer.from(values.name.trim()),
             Buffer.from(currentTimestamp),
           ],
           programId
         );
         await program?.methods
-          ?.createGlossary(values.name, values.content, currentTimestamp)
+          ?.createGlossary(
+            values.name.trim(),
+            values.content.trim(),
+            currentTimestamp
+          )
           .accounts({
             persona: rubricsPda,
-            title: values.name,
-            description: values.content,
+            title: values.name.trim(),
+            description: values.content.trim(),
             timestamp: currentTimestamp,
             systemProgram: SystemProgram.programId,
           })
@@ -171,8 +175,8 @@ export default function GlossaryPage() {
           successCallback = async () => {};
         }
         jobResponse = await axiosBackend.post(endpoint, {
-          name: values.name,
-          glossary: values.content,
+          name: values.name.trim(),
+          glossary: values.content.trim(),
           ...(values.createOrUpdate === "create" && {
             organization_id: publicKey?.toBase58(),
           }),

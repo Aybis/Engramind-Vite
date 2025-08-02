@@ -115,25 +115,29 @@ export default function PersonaPage() {
         const [personaPda] = PublicKey.findProgramAddressSync(
           [
             publicKey?.toBuffer() ?? Buffer.from(""),
-            Buffer.from(values.name),
+            Buffer.from(values.name.trim()),
             Buffer.from(currentTimestamp),
           ],
           programId
         );
         await program?.methods
-          ?.createPersona(values.name, values.personaPrompt, currentTimestamp)
+          ?.createPersona(
+            values.name.trim(),
+            values.personaPrompt.trim(),
+            currentTimestamp
+          )
           .accounts({
             persona: personaPda,
-            title: values.name,
-            description: values.personaPrompt,
+            title: values.name.trim(),
+            description: values.personaPrompt.trim(),
             timestamp: currentTimestamp,
             systemProgram: SystemProgram.programId,
           })
           .rpc();
         const fileIdsTemp = values?.files?.map((x: FileResponse) => x.file_id);
         const response = await axiosBackend.post("/persona/create", {
-          name: values.name,
-          persona_prompt: values.personaPrompt,
+          name: values.name.trim(),
+          persona_prompt: values.personaPrompt.trim(),
           organization_id: publicKey?.toBase58(),
           file_ids: fileIdsTemp,
         });

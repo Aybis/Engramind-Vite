@@ -83,25 +83,29 @@ export default function RubricsPage() {
         const [rubricsPda] = PublicKey.findProgramAddressSync(
           [
             publicKey?.toBuffer() ?? Buffer.from(""),
-            Buffer.from(values.name),
+            Buffer.from(values.name.trim()),
             Buffer.from(currentTimestamp),
           ],
           programId
         );
         await program?.methods
-          ?.createRubrics(values.name, values.description, currentTimestamp)
+          ?.createRubrics(
+            values.name.trim(),
+            values.description.trim(),
+            currentTimestamp
+          )
           .accounts({
             persona: rubricsPda,
-            title: values.name,
-            description: values.description,
+            title: values.name.trim(),
+            description: values.description.trim(),
             timestamp: currentTimestamp,
             systemProgram: SystemProgram.programId,
           })
           .rpc();
         const fileIdsTemp = values?.files?.map((x: FileResponse) => x.file_id);
         const response = await axiosBackend.post("/rubrics/create", {
-          name: values.name,
-          description: values.description,
+          name: values.name.trim(),
+          description: values.description.trim(),
           organization_id: publicKey?.toBase58(),
           file_ids: fileIdsTemp,
         });
