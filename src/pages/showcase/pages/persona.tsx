@@ -115,16 +115,16 @@ export default function PersonaPage() {
         const [personaPda] = PublicKey.findProgramAddressSync(
           [
             publicKey?.toBuffer() ?? Buffer.from(""),
-            Buffer.from(values.name.trim()),
+            Buffer.from(values.name.trim().slice(0, 15)),
             Buffer.from(currentTimestamp),
           ],
           programId
         );
         await program?.methods
-          ?.createPersona(values.name.trim(), currentTimestamp)
+          ?.createPersona(values.name.trim().slice(0, 15), currentTimestamp)
           .accounts({
             persona: personaPda,
-            title: values.name.trim(),
+            title: values.name.trim().slice(0, 15),
             timestamp: currentTimestamp,
             systemProgram: SystemProgram.programId,
           })

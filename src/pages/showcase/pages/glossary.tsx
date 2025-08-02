@@ -133,7 +133,7 @@ export default function GlossaryPage() {
         const [rubricsPda] = PublicKey.findProgramAddressSync(
           [
             publicKey?.toBuffer() ?? Buffer.from(""),
-            Buffer.from(values.name.trim()),
+            Buffer.from(values.name.trim().slice(0, 15)),
             Buffer.from(currentTimestamp),
           ],
           programId
@@ -142,7 +142,7 @@ export default function GlossaryPage() {
           ?.createGlossary(values.name.trim(), currentTimestamp)
           .accounts({
             persona: rubricsPda,
-            title: values.name.trim(),
+            title: values.name.trim().slice(0, 15),
             timestamp: currentTimestamp,
             systemProgram: SystemProgram.programId,
           })

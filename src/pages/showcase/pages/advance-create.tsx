@@ -98,16 +98,19 @@ export default function ShowcaseAdvanceCreatePage() {
         const [scenarioPda] = PublicKey.findProgramAddressSync(
           [
             publicKey?.toBuffer() ?? Buffer.from(""),
-            Buffer.from(values.scenario_title.trim()),
+            Buffer.from(values.scenario_title.trim().slice(0, 15)),
             Buffer.from(currentTimestamp),
           ],
           programId
         );
         await program?.methods
-          ?.createScenario(values.scenario_title.trim(), currentTimestamp)
+          ?.createScenario(
+            values.scenario_title.trim().slice(0, 15),
+            currentTimestamp
+          )
           .accounts({
             persona: scenarioPda,
-            title: values.scenario_title.trim(),
+            title: values.scenario_title.trim().slice(0, 15),
             timestamp: currentTimestamp,
             systemProgram: SystemProgram.programId,
           })

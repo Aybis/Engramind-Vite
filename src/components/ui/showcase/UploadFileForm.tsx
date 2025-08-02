@@ -49,16 +49,16 @@ export const UploadFileForm = ({
       const [scenarioPda] = PublicKey.findProgramAddressSync(
         [
           publicKey?.toBuffer() ?? Buffer.from(""),
-          Buffer.from(file.name.trim()),
+          Buffer.from(file.name.trim().slice(0, 15)),
           Buffer.from(currentTimestamp),
         ],
         programId
       );
       await program?.methods
-        ?.createFile(file.name.trim(), currentTimestamp)
+        ?.createFile(file.name.trim().slice(0, 15), currentTimestamp)
         .accounts({
           persona: scenarioPda,
-          title: file.name.trim(),
+          title: file.name.trim().slice(0, 15),
           timestamp: currentTimestamp,
           systemProgram: SystemProgram.programId,
         })

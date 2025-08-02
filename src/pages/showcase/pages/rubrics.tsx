@@ -83,16 +83,16 @@ export default function RubricsPage() {
         const [rubricsPda] = PublicKey.findProgramAddressSync(
           [
             publicKey?.toBuffer() ?? Buffer.from(""),
-            Buffer.from(values.name.trim()),
+            Buffer.from(values.name.trim().slice(0, 15)),
             Buffer.from(currentTimestamp),
           ],
           programId
         );
         await program?.methods
-          ?.createRubrics(values.name.trim(), currentTimestamp)
+          ?.createRubrics(values.name.trim().slice(0, 15), currentTimestamp)
           .accounts({
             persona: rubricsPda,
-            title: values.name.trim(),
+            title: values.name.trim().slice(0, 15),
             timestamp: currentTimestamp,
             systemProgram: SystemProgram.programId,
           })
