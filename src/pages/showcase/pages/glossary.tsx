@@ -227,7 +227,7 @@ export default function GlossaryPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {formatNickname(currentNickname)}
+              Welcome, {formatNickname(publicKey?.toBase58())}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create and manage your glossaries

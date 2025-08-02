@@ -271,7 +271,7 @@ export const navbarLinkData: NavbarLinkData[] = [
 export const formatNickname = (userNickname?: string) => {
   try {
     return (userNickname ?? "").length > 20
-      ? userNickname?.slice(0, 9) + "..." + userNickname?.slice(-3)
+      ? userNickname?.slice(0, 4) + "..." + userNickname?.slice(-3)
       : userNickname;
   } catch (e) {
     return userNickname;
