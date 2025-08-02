@@ -139,15 +139,10 @@ export default function GlossaryPage() {
           programId
         );
         await program?.methods
-          ?.createGlossary(
-            values.name.trim(),
-            values.content.trim(),
-            currentTimestamp
-          )
+          ?.createGlossary(values.name.trim(), currentTimestamp)
           .accounts({
             persona: rubricsPda,
             title: values.name.trim(),
-            description: values.content.trim(),
             timestamp: currentTimestamp,
             systemProgram: SystemProgram.programId,
           })

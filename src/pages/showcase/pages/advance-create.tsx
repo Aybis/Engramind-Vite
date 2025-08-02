@@ -104,15 +104,10 @@ export default function ShowcaseAdvanceCreatePage() {
           programId
         );
         await program?.methods
-          ?.createScenario(
-            values.scenario_title.trim(),
-            values.scenario_description.trim(),
-            currentTimestamp
-          )
+          ?.createScenario(values.scenario_title.trim(), currentTimestamp)
           .accounts({
             persona: scenarioPda,
             title: values.scenario_title.trim(),
-            description: values.scenario_description.trim(),
             timestamp: currentTimestamp,
             systemProgram: SystemProgram.programId,
           })

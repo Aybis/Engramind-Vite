@@ -89,15 +89,10 @@ export default function RubricsPage() {
           programId
         );
         await program?.methods
-          ?.createRubrics(
-            values.name.trim(),
-            values.description.trim(),
-            currentTimestamp
-          )
+          ?.createRubrics(values.name.trim(), currentTimestamp)
           .accounts({
             persona: rubricsPda,
             title: values.name.trim(),
-            description: values.description.trim(),
             timestamp: currentTimestamp,
             systemProgram: SystemProgram.programId,
           })

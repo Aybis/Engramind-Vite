@@ -121,15 +121,10 @@ export default function PersonaPage() {
           programId
         );
         await program?.methods
-          ?.createPersona(
-            values.name.trim(),
-            values.personaPrompt.trim(),
-            currentTimestamp
-          )
+          ?.createPersona(values.name.trim(), currentTimestamp)
           .accounts({
             persona: personaPda,
             title: values.name.trim(),
-            description: values.personaPrompt.trim(),
             timestamp: currentTimestamp,
             systemProgram: SystemProgram.programId,
           })
