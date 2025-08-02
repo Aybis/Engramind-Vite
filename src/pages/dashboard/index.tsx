@@ -1,5 +1,4 @@
 "use client";
-
 import { Relic } from "../../components/ui";
 import { GalleryVerticalEndIcon } from "lucide-react";
 import { useState } from "react";
