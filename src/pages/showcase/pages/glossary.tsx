@@ -14,7 +14,11 @@ import {
   createUpdateGlossarySchema,
   CreateUpdateGlossaryValues,
 } from "../../../formik";
-import { axiosBackend, fetcherBackend } from "../../../utils/api";
+import {
+  axiosBackend,
+  DEVNET_SMART_CONTRACT_ADDRESS,
+  fetcherBackend,
+} from "../../../utils/api";
 import { GlossaryData, GlossaryResponse } from "../../../interface";
 import useSWR from "swr";
 import { toast } from "sonner";
@@ -22,11 +26,15 @@ import { GlossaryDetail } from "../../../components/ui/showcase/GlossaryDetail";
 import { formatNickname, ItemType, JobStatus } from "../../../utils/helper";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey, SystemProgram } from "@solana/web3.js";
+import { useEngramindProgram } from "../../../hooks/useEngramindProgram";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function GlossaryPage() {
-  const email = Cookies.get("email");
+  const { publicKey } = useWallet();
+  const { program } = useEngramindProgram();
   const username = Cookies.get("name");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,7 +48,7 @@ export default function GlossaryPage() {
   const [currentNickname, setCurrentNickname] = useState(nickname || username);
 
   const { data: totalGlossaryData, mutate: glossaryMutate } = useSWR(
-    `/glossary/all/${email}`,
+    `/glossary/all/${publicKey?.toBase58()}`,
     fetcherBackend
   );
 
@@ -120,6 +128,26 @@ export default function GlossaryPage() {
     onSubmit: async (values, { resetForm }) => {
       setLoading(true);
       try {
+        const programId = new PublicKey(DEVNET_SMART_CONTRACT_ADDRESS);
+        const currentTimestamp = Date.now().toString();
+        const [rubricsPda] = PublicKey.findProgramAddressSync(
+          [
+            publicKey?.toBuffer() ?? Buffer.from(""),
+            Buffer.from(values.name),
+            Buffer.from(currentTimestamp),
+          ],
+          programId
+        );
+        await program?.methods
+          ?.createGlossary(values.name, values.content, currentTimestamp)
+          .accounts({
+            persona: rubricsPda,
+            title: values.name,
+            description: values.content,
+            timestamp: currentTimestamp,
+            systemProgram: SystemProgram.programId,
+          })
+          .rpc();
         let jobResponse: any;
         let endpoint: string;
         let successMessage: string;
@@ -146,7 +174,7 @@ export default function GlossaryPage() {
           name: values.name,
           glossary: values.content,
           ...(values.createOrUpdate === "create" && {
-            organization_id: email,
+            organization_id: publicKey?.toBase58(),
           }),
           ...(values.createOrUpdate === "update" && {
             id: selectedGlossary?.id,

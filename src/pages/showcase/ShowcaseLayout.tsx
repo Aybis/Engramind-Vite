@@ -15,9 +15,11 @@ import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { resetState, settingNickname } from "../../stores/user-slice";
 import Cookies from "js-cookie";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const email = Cookies.get("email");
+  const { publicKey } = useWallet();
   const username = Cookies.get("name");
   const dispatch = useDispatch();
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
@@ -85,7 +87,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           setShowUpdateNickname={setShowUpdateNickname}
           setShowConfirm={setShowConfirm}
           setIsOpenDrawer={setIsOpenDrawer}
-          name={email ?? ""}
+          name={publicKey?.toBase58() ?? ""}
           currentNickname={currentNickname}
         />
         <div className="max-w-7xl mx-auto px-4 py-10 text-neutral-900 dark:text-neutral-100">
@@ -142,28 +144,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
         <div className="flex flex-col gap-4 items-start mt-[20px] relative">
-          <div className="flex gap-x-2 justify-center items-center">
-            <img
-              // onClick={() => setShowUpdateNickname(true)}
-              src="/assets/male_persona.avif"
-              alt="Profile"
-              className="rounded-full w-8 h-8 cursor-pointer hover:shadow-lg transition-all duration-300"
-              width={400}
-              height={300}
-            />
-            <div
-              // onClick={() => setShowUpdateNickname(true)}
-              className="text-sm cursor-pointer text-purple-600 dark:text-purple-300 capitalize font-semibold"
-            >
-              {formatNickname(currentNickname)}
-            </div>
-          </div>
-          <button
-            onClick={() => setShowConfirm(true)}
-            className="text-sm text-red-600 dark:text-red-400 hover:underline cursor-pointer transition"
-          >
-            Logout
-          </button>
+          <WalletMultiButton />
           <ThemeToggle customClassName="" />
         </div>
       </SideDrawer>

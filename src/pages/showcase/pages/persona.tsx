@@ -2,7 +2,11 @@
 import { PlusIcon } from "lucide-react";
 import ShowcaseLayout from "../ShowcaseLayout";
 import { useCallback, useEffect, useState } from "react";
-import { axiosBackend, fetcherBackend } from "../../../utils/api";
+import {
+  axiosBackend,
+  DEVNET_SMART_CONTRACT_ADDRESS,
+  fetcherBackend,
+} from "../../../utils/api";
 import { useFormik } from "formik";
 import useSWR from "swr";
 import { PersonaData, PersonaResponse } from "../../../interface/persona";
@@ -29,9 +33,13 @@ import { FileResponse, JobResponse } from "../../../interface";
 import { formatNickname, ItemType, JobStatus } from "../../../utils/helper";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useEngramindProgram } from "../../../hooks/useEngramindProgram";
+import { PublicKey, SystemProgram } from "@solana/web3.js";
 
 export default function PersonaPage() {
-  const email = Cookies.get("email");
+  const { publicKey } = useWallet();
+  const { program } = useEngramindProgram();
   const username = Cookies.get("name");
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditPersona, setIsOpenEditPersona] = useState(false);
@@ -44,7 +52,7 @@ export default function PersonaPage() {
   const { nickname } = useSelector((state: any) => state.user);
   const [currentNickname, setCurrentNickname] = useState(nickname || username);
   const { data: totalPersonaData, mutate: personaMutate } = useSWR(
-    `/persona/all/${email}`,
+    `/persona/all/${publicKey?.toBase58()}`,
     fetcherBackend
   );
   const totalPersonaResult: PersonaData[] = totalPersonaData?.data;
@@ -102,11 +110,31 @@ export default function PersonaPage() {
     onSubmit: async (values, { resetForm }) => {
       try {
         setLoading(true);
+        const programId = new PublicKey(DEVNET_SMART_CONTRACT_ADDRESS);
+        const currentTimestamp = Date.now().toString();
+        const [personaPda] = PublicKey.findProgramAddressSync(
+          [
+            publicKey?.toBuffer() ?? Buffer.from(""),
+            Buffer.from(values.name),
+            Buffer.from(currentTimestamp),
+          ],
+          programId
+        );
+        await program?.methods
+          ?.createPersona(values.name, values.personaPrompt, currentTimestamp)
+          .accounts({
+            persona: personaPda,
+            title: values.name,
+            description: values.personaPrompt,
+            timestamp: currentTimestamp,
+            systemProgram: SystemProgram.programId,
+          })
+          .rpc();
         const fileIdsTemp = values?.files?.map((x: FileResponse) => x.file_id);
         const response = await axiosBackend.post("/persona/create", {
           name: values.name,
           persona_prompt: values.personaPrompt,
-          organization_id: email,
+          organization_id: publicKey?.toBase58(),
           file_ids: fileIdsTemp,
         });
         const jobResponse = response.data as JobResponse;

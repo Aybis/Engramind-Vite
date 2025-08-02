@@ -14,7 +14,11 @@ import {
   createRubricsSchema,
   CreateRubricValues,
 } from "../../../formik";
-import { axiosBackend, fetcherBackend } from "../../../utils/api";
+import {
+  axiosBackend,
+  DEVNET_SMART_CONTRACT_ADDRESS,
+  fetcherBackend,
+} from "../../../utils/api";
 import { CreateRubricForm } from "../../../components/ui/showcase/CreateRubricForm";
 import {
   Assessment,
@@ -28,11 +32,15 @@ import { toast } from "sonner";
 import { formatNickname, ItemType, JobStatus } from "../../../utils/helper";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey, SystemProgram } from "@solana/web3.js";
+import { useEngramindProgram } from "../../../hooks/useEngramindProgram";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function RubricsPage() {
-  const email = Cookies.get("email");
+  const { publicKey } = useWallet();
+  const { program } = useEngramindProgram();
   const username = Cookies.get("name");
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditRubrics, setIsOpenEditRubrics] = useState(false);
@@ -47,7 +55,7 @@ export default function RubricsPage() {
   const { nickname } = useSelector((state: any) => state.user);
   const [currentNickname, setCurrentNickname] = useState(nickname || username);
   const { data: totalRubricsData, mutate: rubricsMutate } = useSWR(
-    `/rubrics/all/${email}`,
+    `/rubrics/all/${publicKey?.toBase58()}`,
     fetcherBackend
   );
   const totalRubricsResult: Assessment[] = totalRubricsData?.data;
@@ -70,11 +78,31 @@ export default function RubricsPage() {
     onSubmit: async (values, { resetForm }) => {
       try {
         setLoading(true);
+        const programId = new PublicKey(DEVNET_SMART_CONTRACT_ADDRESS);
+        const currentTimestamp = Date.now().toString();
+        const [rubricsPda] = PublicKey.findProgramAddressSync(
+          [
+            publicKey?.toBuffer() ?? Buffer.from(""),
+            Buffer.from(values.name),
+            Buffer.from(currentTimestamp),
+          ],
+          programId
+        );
+        await program?.methods
+          ?.createRubrics(values.name, values.description, currentTimestamp)
+          .accounts({
+            persona: rubricsPda,
+            title: values.name,
+            description: values.description,
+            timestamp: currentTimestamp,
+            systemProgram: SystemProgram.programId,
+          })
+          .rpc();
         const fileIdsTemp = values?.files?.map((x: FileResponse) => x.file_id);
         const response = await axiosBackend.post("/rubrics/create", {
           name: values.name,
           description: values.description,
-          organization_id: email,
+          organization_id: publicKey?.toBase58(),
           file_ids: fileIdsTemp,
         });
         const jobResponse = response.data as JobResponse;

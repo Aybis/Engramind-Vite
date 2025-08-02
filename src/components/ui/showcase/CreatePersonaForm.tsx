@@ -10,6 +10,7 @@ import useSWR from "swr";
 import { fetcherBackend } from "../../../utils/api";
 import { FileResponse } from "../../../interface";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 interface CreatePersonaForm {
   loading: boolean;
@@ -26,11 +27,11 @@ export const CreatePersonaForm = ({
   uploading,
   setUploading,
 }: CreatePersonaForm) => {
-  const email = Cookies.get("email");
+  const { publicKey } = useWallet();
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/files/all/${email}`,
+    `/files/all/${publicKey?.toBase58()}`,
     fetcherBackend
   );
 

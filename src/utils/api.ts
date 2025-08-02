@@ -5,6 +5,8 @@ export const API_KEY = import.meta.env.VITE_AI_KEY;
 export const API_REQUEST_FROM = import.meta.env.VITE_REQUEST_FROM;
 export const OPEN_ROUTER_API_KEY = import.meta.env.VITE_OPEN_ROUTER_API_KEY;
 export const BACKEND_BASE_URL = import.meta.env.VITE_BASE_URL_BACKEND;
+export const DEVNET_SMART_CONTRACT_ADDRESS = import.meta.env
+  .VITE_DEVNET_SMART_CONTRACT_ADDRESS;
 
 export const axiosElwyn = axios.create({
   baseURL: API_BASE_URL,

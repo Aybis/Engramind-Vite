@@ -4,6 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import ThemeToggle from "../../../theme/theme-toggle";
 import { formatNickname, navbarLinkData } from "../../../utils/helper";
 import { NavbarLinkData } from "../../../interface";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useWindowWidth } from "../../../hooks/useWindowWidth";
 
 interface HeaderProps {
   name: string;
@@ -22,6 +24,7 @@ export const ShowcaseHeader = (
     currentNickname,
   }: HeaderProps // Default value for name
 ) => {
+  const width = useWindowWidth();
   const location = useLocation();
   const pathname = location.pathname;
   const navigate = useNavigate();
@@ -51,32 +54,9 @@ export const ShowcaseHeader = (
           ))}
         </nav>
         <div className="flex gap-4 items-center relative">
-          <div className="text-sm text-purple-600 dark:text-purple-300 capitalize font-semibold">
-            Hi,{" "}
-            <button
-              // onClick={() => setShowUpdateNickname(true)}
-              type="button"
-              className="cursor-pointer"
-            >
-              {formatNickname(currentNickname)}
-            </button>
-          </div>
-          <BellDot className="cursor-pointer text-purple-600 dark:text-purple-400 md:block hidden" />
-          <img
-            // onClick={() => setShowUpdateNickname(true)}
-            src="/assets/male_persona.avif"
-            alt="Profile"
-            className="rounded-full w-8 h-8 cursor-pointer hover:shadow-lg transition-all duration-300"
-            width={400}
-            height={300}
+          <WalletMultiButton
+            style={{ display: width > 768 ? "flex" : "none" }}
           />
-          <button
-            type="button"
-            onClick={() => setShowConfirm(true)}
-            className="text-sm md:block hidden text-red-600 dark:text-red-400 hover:underline cursor-pointer transition"
-          >
-            Logout
-          </button>
           <ThemeToggle customClassName="md:block hidden" />
         </div>
       </div>

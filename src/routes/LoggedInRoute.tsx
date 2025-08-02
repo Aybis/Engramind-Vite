@@ -1,7 +1,11 @@
-import Cookies from "js-cookie";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { Navigate, Outlet } from "react-router-dom";
 
 export const LoggedInRoute = () => {
-  const email = Cookies.get("email");
-  return email ? <Navigate to="/showcase" replace /> : <Outlet />;
+  const { publicKey } = useWallet();
+  return publicKey?.toBase58() ? (
+    <Navigate to="/showcase" replace />
+  ) : (
+    <Outlet />
+  );
 };

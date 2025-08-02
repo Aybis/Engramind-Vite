@@ -1,10 +1,16 @@
 import { AnimatedSpinner } from "../AnimatedSpinner";
 import { useEffect, useState } from "react";
-import { axiosBackend } from "../../../utils/api";
+import {
+  axiosBackend,
+  DEVNET_SMART_CONTRACT_ADDRESS,
+} from "../../../utils/api";
 import { FileJobResponse, FileResponse, JobResponse } from "../../../interface";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { JobStatus } from "../../../utils/helper";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey, SystemProgram } from "@solana/web3.js";
+import { useEngramindProgram } from "../../../hooks/useEngramindProgram";
 
 interface UploadFileForm {
   loading: boolean;
@@ -19,7 +25,8 @@ export const UploadFileForm = ({
   setLoading,
   filesMutate,
 }: UploadFileForm) => {
-  const email = Cookies.get("email");
+  const { publicKey } = useWallet();
+  const { program } = useEngramindProgram();
   const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string>("");
 
@@ -34,9 +41,28 @@ export const UploadFileForm = ({
     if (!file) return;
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("organization_id", email ?? "");
+    formData.append("organization_id", publicKey?.toBase58() ?? "");
     try {
       setLoading(true);
+      const programId = new PublicKey(DEVNET_SMART_CONTRACT_ADDRESS);
+      const currentTimestamp = Date.now().toString();
+      const [scenarioPda] = PublicKey.findProgramAddressSync(
+        [
+          publicKey?.toBuffer() ?? Buffer.from(""),
+          Buffer.from(file.name),
+          Buffer.from(currentTimestamp),
+        ],
+        programId
+      );
+      await program?.methods
+        ?.createFile(file.name, currentTimestamp)
+        .accounts({
+          persona: scenarioPda,
+          title: file.name,
+          timestamp: currentTimestamp,
+          systemProgram: SystemProgram.programId,
+        })
+        .rpc();
       const response = await axiosBackend.post("/files/create", formData);
       const jobResponse = response.data as JobResponse;
       const createFileInterval = setInterval(async () => {

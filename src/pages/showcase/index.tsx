@@ -19,14 +19,13 @@ import { ConversationModalForm } from "../../components/ui/showcase/Conversation
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { settingNickname } from "../../stores/user-slice";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function ScenariosPage() {
-  const email = Cookies.get("email");
   const username = Cookies.get("name");
-  const dispatch = useDispatch();
+  const { publicKey } = useWallet();
   const [isOpen, setIsOpen] = useState(false);
   const [loading] = useState(false);
   const [openPopoverIndex, setOpenPopoverIndex] = useState<number | null>(null);
@@ -44,7 +43,7 @@ export default function ScenariosPage() {
   const navigate = useNavigate();
 
   const { data: totalScenariosData } = useSWR(
-    `/quick-roleplay/all/${email}`,
+    `/quick-roleplay/all/${publicKey?.toBase58()}`,
     fetcherBackend
   );
 

@@ -17,7 +17,11 @@ import {
   ModalProgress,
 } from "../../../components/ui";
 import useSWR from "swr";
-import { axiosBackend, fetcherBackend } from "../../../utils/api";
+import {
+  axiosBackend,
+  DEVNET_SMART_CONTRACT_ADDRESS,
+  fetcherBackend,
+} from "../../../utils/api";
 import { useFormik } from "formik";
 import {
   createQuickScenarioInitialValues,
@@ -29,9 +33,13 @@ import { JobStatus, scenarioPresets } from "../../../utils/helper";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey, SystemProgram } from "@solana/web3.js";
+import { useEngramindProgram } from "../../../hooks/useEngramindProgram";
 
 export default function ShowcaseQuickCreatePage() {
-  const email = Cookies.get("email");
+  const { publicKey } = useWallet();
+  const { program } = useEngramindProgram();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
@@ -40,7 +48,7 @@ export default function ShowcaseQuickCreatePage() {
     string | null
   >(null);
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/files/all/${email}`,
+    `/files/all/${publicKey?.toBase58()}`,
     fetcherBackend
   );
 
@@ -54,13 +62,37 @@ export default function ShowcaseQuickCreatePage() {
     onSubmit: async (values) => {
       try {
         setLoading(true);
+        const programId = new PublicKey(DEVNET_SMART_CONTRACT_ADDRESS);
+        const currentTimestamp = Date.now().toString();
+        const [scenarioPda] = PublicKey.findProgramAddressSync(
+          [
+            publicKey?.toBuffer() ?? Buffer.from(""),
+            Buffer.from(values.scenario_title),
+            Buffer.from(currentTimestamp),
+          ],
+          programId
+        );
+        await program?.methods
+          ?.createScenario(
+            values.scenario_title,
+            values.scenario_description,
+            currentTimestamp
+          )
+          .accounts({
+            persona: scenarioPda,
+            title: values.scenario_title,
+            description: values.scenario_description,
+            timestamp: currentTimestamp,
+            systemProgram: SystemProgram.programId,
+          })
+          .rpc();
         const fileIdsTemp = values.files.map((x: FileResponse) => x.file_id);
         const response = await axiosBackend.post("/quick-roleplay/create", {
           scenario_title: values.scenario_title,
           ai_role: values.ai_role,
           my_role: values.my_role,
           scenario_description: values.scenario_description,
-          organization_id: email,
+          organization_id: publicKey?.toBase58(),
           file_ids: fileIdsTemp,
         });
         setShowLoadingProgress(true);

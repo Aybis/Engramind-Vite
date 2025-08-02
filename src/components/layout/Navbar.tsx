@@ -3,23 +3,19 @@
 import { useEffect, useState } from "react";
 import { MobileNavLink, NavLink } from "../ui/HelperComponents";
 import ThemeToggle from "../../theme/theme-toggle";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useWindowWidth } from "../../hooks/useWindowWidth";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 type NavbarProps = {
   showMenu: boolean;
 };
 
 export default function Navbar({ showMenu }: NavbarProps) {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const width = useWindowWidth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleConnectWallet = async () => {
-    navigate("/showcase");
-  };
 
   useEffect(() => {
     setMounted(true);
@@ -70,24 +66,9 @@ export default function Navbar({ showMenu }: NavbarProps) {
 
           {/* Button Get Started */}
           {!isLoggedIn && (
-            <div className="hidden md:flex items-center space-x-8">
-              <div className="flex gap-x-2">
-                <a
-                  href={"/auth/login"}
-                  className="px-4 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                >
-                  Login
-                </a>
-                <a
-                  href={"/auth/register"}
-                  className="px-4 py-2 rounded-md bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium text-sm hover:from-purple-700 hover:to-indigo-700 transition-colors"
-                >
-                  Sign Up
-                </a>
-              </div>
-
-              <ThemeToggle />
-            </div>
+            <WalletMultiButton
+              style={{ display: width > 768 ? "flex" : "none" }}
+            />
           )}
 
           {/* Menu Hamburger */}
@@ -136,15 +117,7 @@ export default function Navbar({ showMenu }: NavbarProps) {
             <ThemeToggle />
           </div>
           <div className="pt-4 flex flex-col space-y-3">
-            {/* <button className="px-4 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium text-sm">
-          Login
-        </button> */}
-            <button
-              onClick={() => handleConnectWallet()}
-              className="px-4 py-2 rounded-md bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium text-sm"
-            >
-              Get Started
-            </button>
+            <WalletMultiButton />
           </div>
         </div>
       </div>

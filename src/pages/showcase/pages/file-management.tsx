@@ -17,16 +17,17 @@ import {
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { JobStatus } from "../../../utils/helper";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function FileManagementPage() {
-  const email = Cookies.get("email");
+  const { publicKey } = useWallet();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/files/all/${email}`,
+    `/files/all/${publicKey?.toBase58()}`,
     fetcherBackend
   );
 

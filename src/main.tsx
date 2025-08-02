@@ -7,6 +7,7 @@ import { Toaster } from "sonner";
 import { useTheme } from "./theme";
 import { Provider } from "react-redux";
 import { store } from "../src/stores";
+import { WalletConnectionProvider } from "./WalletConnectionProvider";
 
 const { setInitialTheme, toggleTheme } = useTheme();
 
@@ -16,9 +17,11 @@ document.getElementById("theme-toggle")?.addEventListener("click", toggleTheme);
 
 ReactDOM.createRoot(document.getElementById("root") as any).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-      <Toaster position="top-center" />
-    </Provider>
+    <WalletConnectionProvider>
+      <Provider store={store}>
+        <App />
+        <Toaster position="top-center" />
+      </Provider>
+    </WalletConnectionProvider>
   </React.StrictMode>
 );
