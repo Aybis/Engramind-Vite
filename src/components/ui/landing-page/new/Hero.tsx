@@ -1,7 +1,9 @@
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
+  const navigate = useNavigate();
   const imageAsset = [
     "/assets/image.png",
     "/assets/image2.png",
@@ -19,7 +21,12 @@ export default function Hero() {
           Turn your life’s memories into digital treasures that live forever on
           the blockchain.
         </p>
-        <button className="mt-8 sm:mt-10 lg:mt-12 px-4 py-2 flex items-center gap-x-2 bg-purple-600 leading-relaxed text-white rounded-md hover:bg-purple-700 transition duration-300 ease-in-out text-base sm:text-lg">
+        <button
+          onClick={() => {
+            navigate("/auth/register");
+          }}
+          className="mt-8 cursor-pointer sm:mt-10 lg:mt-12 px-4 py-2 flex items-center gap-x-2 bg-purple-600 leading-relaxed text-white rounded-md hover:bg-purple-700 transition duration-300 ease-in-out text-base sm:text-lg"
+        >
           <LockClosedIcon />
           Secure Your Slot
         </button>

@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function HeroSection() {
+  const navigate = useNavigate();
   return (
     <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto dark:bg-zinc-950">
       <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -17,10 +19,20 @@ export default function HeroSection() {
             on the blockchain.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="px-6 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium text-sm hover:from-purple-700 hover:to-indigo-700 transition-colors">
+            <button
+              onClick={() => {
+                navigate("/auth/register");
+              }}
+              className="px-6 cursor-pointer py-3 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium text-sm hover:from-purple-700 hover:to-indigo-700 transition-colors"
+            >
               Get Started
             </button>
-            <button className="hidden px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium text-sm hover:bg-gray-50 transition-colors">
+            <button
+              onClick={() => {
+                navigate("/auth/register");
+              }}
+              className="hidden cursor-pointer px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-medium text-sm hover:bg-gray-50 transition-colors"
+            >
               Reserve My Spot
             </button>
           </div>

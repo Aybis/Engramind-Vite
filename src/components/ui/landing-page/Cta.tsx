@@ -1,6 +1,8 @@
-import React from 'react';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Cta() {
+  const navigate = useNavigate();
   return (
     <section className="py-20 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -13,17 +15,22 @@ export default function Cta() {
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <button className="px-6 py-3 bg-white text-indigo-700 font-medium rounded-lg hover:bg-gray-100 transition-colors">
+          <button
+            onClick={() => {
+              navigate("/auth/register");
+            }}
+            className="px-6 py-3 cursor-pointer bg-white text-indigo-700 font-medium rounded-lg hover:bg-gray-100 transition-colors"
+          >
             Reserve My Username
           </button>
-          <button className="px-6 py-3 bg-transparent border border-white text-white font-medium rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+          <button className="px-6 cursor-pointer py-3 bg-transparent border border-white text-white font-medium rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
             Learn More
           </button>
         </div>
 
         <p className="mt-8 text-sm opacity-80 max-w-lg mx-auto">
           Limited time offer: First 500 registrations receive 50% off the
-          initial package.{' '}
+          initial package.{" "}
           <span className="font-medium">Only 127 spots left!</span>
         </p>
       </div>

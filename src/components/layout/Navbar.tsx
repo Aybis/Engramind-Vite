@@ -136,14 +136,17 @@ export default function Navbar({ showMenu }: NavbarProps) {
             <ThemeToggle />
           </div>
           <div className="pt-4 flex flex-col space-y-3">
-            {/* <button className="px-4 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium text-sm">
-          Login
-        </button> */}
             <button
-              onClick={() => handleConnectWallet()}
-              className="px-4 py-2 rounded-md bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium text-sm"
+              onClick={() => navigate("/auth/login")}
+              className="px-4 cursor-pointer py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium text-sm"
             >
-              Get Started
+              Login
+            </button>
+            <button
+              onClick={() => navigate("/auth/register")}
+              className="px-4 py-2 cursor-pointer rounded-md bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium text-sm"
+            >
+              Register
             </button>
           </div>
         </div>

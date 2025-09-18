@@ -58,7 +58,7 @@ export const RegisterPage = () => {
       {/* Navigation */}
       <Navbar showMenu={false} />
       <section className="flex justify-center items-center min-h-[calc(100vh-64px)] px-4">
-        <div className="max-w-md w-full bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-zinc-200 dark:border-zinc-700 shadow-sm">
+        <div className="max-w-md mt-[75px] md:mt-0 w-full bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-zinc-200 dark:border-zinc-700 shadow-sm">
           <h1 className="text-center text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-6">
             One sign-up.
             <br />A lifetime of impact.
