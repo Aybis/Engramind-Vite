@@ -1,54 +1,60 @@
-"use client";
-import { PlusIcon } from "lucide-react";
-import ShowcaseLayout from "../ShowcaseLayout";
-import { useEffect, useState } from "react";
+'use client';
+import { PlusIcon } from 'lucide-react';
+import ShowcaseLayout from '../ShowcaseLayout';
+import { useEffect, useState } from 'react';
 import {
   SearchBar,
   AnimatedModal,
   UpdateRubricsForm,
   ItemCard,
-} from "../../../components/ui";
-import { useFormik } from "formik";
+} from '../../../components/ui';
+import { useFormik } from 'formik';
 import {
   createRubricInitialValues,
   createRubricsSchema,
   CreateRubricValues,
-} from "../../../formik";
-import { axiosBackend, fetcherBackend } from "../../../utils/api";
-import { CreateRubricForm } from "../../../components/ui/showcase/CreateRubricForm";
+} from '../../../formik';
+import { axiosBackend, fetcherBackend } from '../../../utils/api';
+import { CreateRubricForm } from '../../../components/ui/showcase/CreateRubricForm';
 import {
   Assessment,
   FileResponse,
   JobResponse,
   RubricsResponse,
-} from "../../../interface";
-import useSWR from "swr";
-import { RubricsDetail } from "../../../components/ui/showcase/RubricsDetail";
-import { toast } from "sonner";
-import { formatNickname, ItemType, JobStatus } from "../../../utils/helper";
-import { useSelector } from "react-redux";
-import Cookies from "js-cookie";
+} from '../../../interface';
+import useSWR from 'swr';
+import { RubricsDetail } from '../../../components/ui/showcase/RubricsDetail';
+import { toast } from 'sonner';
+import {
+  formatNickname,
+  ItemType,
+  JobStatus,
+  tempName,
+} from '../../../utils/helper';
+import { useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import RenderIf from '../../../utils/RenderIf';
 
 export type FlatFormValues = Record<string, any>;
 
 export default function RubricsPage() {
-  const email = Cookies.get("email");
-  const username = Cookies.get("name");
+  const email = Cookies.get('email');
+  const username = Cookies.get('name');
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditRubrics, setIsOpenEditRubrics] = useState(false);
   const [isOpenRubricsDetail, setIsOpenRubricsDetail] =
     useState<boolean>(false);
   const [selectedRubrics, setSelectedRubrics] = useState<Assessment | null>(
-    null
+    null,
   );
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [rubricId, setRubricId] = useState("");
+  const [rubricId, setRubricId] = useState('');
   const { nickname } = useSelector((state: any) => state.user);
   const [currentNickname, setCurrentNickname] = useState(nickname || username);
   const { data: totalRubricsData, mutate: rubricsMutate } = useSWR(
     `/rubrics/all/${email}`,
-    fetcherBackend
+    fetcherBackend,
   );
   const totalRubricsResult: Assessment[] = totalRubricsData?.data;
 
@@ -71,7 +77,7 @@ export default function RubricsPage() {
       try {
         setLoading(true);
         const fileIdsTemp = values?.files?.map((x: FileResponse) => x.file_id);
-        const response = await axiosBackend.post("/rubrics/create", {
+        const response = await axiosBackend.post('/rubrics/create', {
           name: values.name,
           description: values.description,
           organization_id: email,
@@ -80,19 +86,19 @@ export default function RubricsPage() {
         const jobResponse = response.data as JobResponse;
         const createRubricsInterval = setInterval(async () => {
           const rubricsStatus = await axiosBackend.get(
-            `/rubrics/job-status-create/${jobResponse.jobId}`
+            `/rubrics/job-status-create/${jobResponse.jobId}`,
           );
           const rubricsResult = rubricsStatus.data as RubricsResponse;
           if (rubricsResult.jobStatus === JobStatus.Completed) {
-            toast.success("Rubrics created successfully!", {
-              id: "rubrics-success",
+            toast.success('Rubrics created successfully!', {
+              id: 'rubrics-success',
               duration: 4000,
             });
             const finalResult = {
               ...rubricsResult?.result?.assessment?.rubrics,
               name: rubricsResult?.result?.assessment?.name?.replace(
-                "Assessment for Rubric: ",
-                ""
+                'Assessment for Rubric: ',
+                '',
               ),
             };
             rubricsMutate();
@@ -105,8 +111,8 @@ export default function RubricsPage() {
             clearInterval(createRubricsInterval);
           } else if (rubricsResult.jobStatus === JobStatus.Failed) {
             setLoading(false);
-            toast.error("Rubrics failed to be created. Please try again.", {
-              id: "rubrics-error",
+            toast.error('Rubrics failed to be created. Please try again.', {
+              id: 'rubrics-error',
               duration: 4000,
             });
             clearInterval(createRubricsInterval);
@@ -116,7 +122,7 @@ export default function RubricsPage() {
         toast.error(e?.toString(), {
           duration: 4000,
         });
-        console.log(e, "<<<< EEE");
+        console.log(e, '<<<< EEE');
         setLoading(false);
       }
     },
@@ -141,13 +147,15 @@ export default function RubricsPage() {
               Create your own scoring criteria.
             </p>
           </div>
-          <a
-            onClick={handleClickNewRubrics}
-            className="flex items-center gap-x-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-200 cursor-pointer md:mb-0 mb-[20px]"
-          >
-            <PlusIcon className="h-4 w-4" />
-            <span>New Rubric</span>
-          </a>
+          <RenderIf condition={tempName.includes(currentNickname)}>
+            <button
+              onClick={handleClickNewRubrics}
+              className="flex items-center gap-x-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-200 cursor-pointer md:mb-0 mb-[20px]"
+            >
+              <PlusIcon className="h-4 w-4" />
+              <span>New Rubric</span>
+            </button>
+          </RenderIf>
         </div>
         <SearchBar title="Rubric" />
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
