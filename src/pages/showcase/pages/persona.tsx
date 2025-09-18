@@ -1,11 +1,11 @@
-"use client";
-import { PlusIcon } from "lucide-react";
-import ShowcaseLayout from "../ShowcaseLayout";
-import { useCallback, useEffect, useState } from "react";
-import { axiosBackend, fetcherBackend } from "../../../utils/api";
-import { useFormik } from "formik";
-import useSWR from "swr";
-import { PersonaData, PersonaResponse } from "../../../interface/persona";
+'use client';
+import { PlusIcon } from 'lucide-react';
+import ShowcaseLayout from '../ShowcaseLayout';
+import { useCallback, useEffect, useState } from 'react';
+import { axiosBackend, fetcherBackend } from '../../../utils/api';
+import { useFormik } from 'formik';
+import useSWR from 'swr';
+import { PersonaData, PersonaResponse } from '../../../interface/persona';
 import {
   CreatePersonaForm,
   UpdatePersonaForm,
@@ -13,7 +13,7 @@ import {
   AnimatedModal,
   Relic,
   ItemCard,
-} from "../../../components/ui";
+} from '../../../components/ui';
 import {
   CreateFormValues,
   EditFormValues,
@@ -21,31 +21,37 @@ import {
   createPersonaSchema,
   updatePersonaInitialValues,
   updatePersonaSchema,
-} from "../../../formik";
-import { populateUpdateFormik } from "../../../utils/showcase";
-import { PersonaDetails } from "../../../components/ui/showcase/PersonaDetails";
-import { toast } from "sonner";
-import { FileResponse, JobResponse } from "../../../interface";
-import { formatNickname, ItemType, JobStatus } from "../../../utils/helper";
-import { useSelector } from "react-redux";
-import Cookies from "js-cookie";
+} from '../../../formik';
+import { populateUpdateFormik } from '../../../utils/showcase';
+import { PersonaDetails } from '../../../components/ui/showcase/PersonaDetails';
+import { toast } from 'sonner';
+import { FileResponse, JobResponse } from '../../../interface';
+import {
+  formatNickname,
+  ItemType,
+  JobStatus,
+  tempName,
+} from '../../../utils/helper';
+import { useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import RenderIf from '../../../utils/RenderIf';
 
 export default function PersonaPage() {
-  const email = Cookies.get("email");
-  const username = Cookies.get("name");
+  const email = Cookies.get('email');
+  const username = Cookies.get('name');
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditPersona, setIsOpenEditPersona] = useState(false);
   const [isOpenPersonaDetails, setIsOpenPersonaDetails] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<PersonaData | null>(
-    null
+    null,
   );
   const { nickname } = useSelector((state: any) => state.user);
   const [currentNickname, setCurrentNickname] = useState(nickname || username);
   const { data: totalPersonaData, mutate: personaMutate } = useSWR(
     `/persona/all/${email}`,
-    fetcherBackend
+    fetcherBackend,
   );
   const totalPersonaResult: PersonaData[] = totalPersonaData?.data;
 
@@ -63,15 +69,15 @@ export default function PersonaPage() {
     onSubmit: async (values, { resetForm }) => {
       try {
         setLoading(true);
-        const response = await axiosBackend.post("/persona/update", values);
+        const response = await axiosBackend.post('/persona/update', values);
         const jobResponse = response.data as JobResponse;
         const updatePersonaInterval = setInterval(async () => {
           const personaStatus = await axiosBackend.get(
-            `/persona/job-status-update/${jobResponse.jobId}`
+            `/persona/job-status-update/${jobResponse.jobId}`,
           );
           const personaResult = personaStatus.data as PersonaResponse;
           if (personaResult.jobStatus === JobStatus.Completed) {
-            toast.success("Persona updated successfully!", {
+            toast.success('Persona updated successfully!', {
               duration: 4000,
             });
             personaMutate();
@@ -81,7 +87,7 @@ export default function PersonaPage() {
             clearInterval(updatePersonaInterval);
           } else if (personaResult.jobStatus === JobStatus.Failed) {
             setLoading(false);
-            toast.error("Persona failed to be updated. Please try again.", {
+            toast.error('Persona failed to be updated. Please try again.', {
               duration: 4000,
             });
             clearInterval(updatePersonaInterval);
@@ -103,7 +109,7 @@ export default function PersonaPage() {
       try {
         setLoading(true);
         const fileIdsTemp = values?.files?.map((x: FileResponse) => x.file_id);
-        const response = await axiosBackend.post("/persona/create", {
+        const response = await axiosBackend.post('/persona/create', {
           name: values.name,
           persona_prompt: values.personaPrompt,
           organization_id: email,
@@ -112,12 +118,12 @@ export default function PersonaPage() {
         const jobResponse = response.data as JobResponse;
         const createPersonaInterval = setInterval(async () => {
           const personaStatus = await axiosBackend.get(
-            `/persona/job-status-create/${jobResponse.jobId}`
+            `/persona/job-status-create/${jobResponse.jobId}`,
           );
           const personaResult = personaStatus.data as PersonaResponse;
           if (personaResult.jobStatus === JobStatus.Completed) {
-            toast.success("Persona created successfully!", {
-              id: "persona-success",
+            toast.success('Persona created successfully!', {
+              id: 'persona-success',
               duration: 4000,
             });
             personaMutate();
@@ -129,8 +135,8 @@ export default function PersonaPage() {
             clearInterval(createPersonaInterval);
           } else if (personaResult.jobStatus === JobStatus.Failed) {
             setLoading(false);
-            toast.error("Persona failed to be created. Please try again.", {
-              id: "persona-error",
+            toast.error('Persona failed to be created. Please try again.', {
+              id: 'persona-error',
               duration: 4000,
             });
             clearInterval(createPersonaInterval);
@@ -171,15 +177,18 @@ export default function PersonaPage() {
               Mentor, at your own time.
             </p>
           </div>
-          <a
-            onClick={() => {
-              setIsOpen(true);
-            }}
-            className="flex items-center gap-x-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-200 cursor-pointer md:mb-0 mb-[20px]"
-          >
-            <PlusIcon className="h-4 w-4" />
-            <span>New Persona</span>
-          </a>
+
+          <RenderIf condition={tempName.includes(currentNickname)}>
+            <button
+              onClick={() => {
+                setIsOpen(true);
+              }}
+              className="flex items-center gap-x-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-200 cursor-pointer md:mb-0 mb-[20px]"
+            >
+              <PlusIcon className="h-4 w-4" />
+              <span>New Persona</span>
+            </button>
+          </RenderIf>
         </div>
         <SearchBar title="Persona" />
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

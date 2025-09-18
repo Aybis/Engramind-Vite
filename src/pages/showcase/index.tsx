@@ -1,31 +1,32 @@
-"use client";
-import { PlusIcon } from "lucide-react";
-import ShowcaseLayout from "./ShowcaseLayout";
-import { useEffect, useState } from "react";
+'use client';
+import { PlusIcon } from 'lucide-react';
+import ShowcaseLayout from './ShowcaseLayout';
+import { useEffect, useState } from 'react';
 import {
   SearchBar,
   AnimatedModal,
   CategoryFilter,
   ScenarioCard,
   ScenarioRoleplayDetail,
-} from "../../components/ui";
-import { axiosElwyn, fetcherBackend } from "../../utils/api";
-import { CreationMode } from "../../components/ui/showcase/CreationMode";
-import { Category, formatNickname } from "../../utils/helper";
-import { useNavigate } from "react-router-dom";
-import useSWR from "swr";
-import { RoleplayResponse } from "../../interface";
-import { ConversationModalForm } from "../../components/ui/showcase/ConversationModalForm";
-import { toast } from "sonner";
-import { useDispatch, useSelector } from "react-redux";
-import Cookies from "js-cookie";
-import { settingNickname } from "../../stores/user-slice";
+} from '../../components/ui';
+import { axiosElwyn, fetcherBackend } from '../../utils/api';
+import { CreationMode } from '../../components/ui/showcase/CreationMode';
+import { Category, formatNickname, tempName } from '../../utils/helper';
+import { useNavigate } from 'react-router-dom';
+import useSWR from 'swr';
+import { RoleplayResponse } from '../../interface';
+import { ConversationModalForm } from '../../components/ui/showcase/ConversationModalForm';
+import { toast } from 'sonner';
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { settingNickname } from '../../stores/user-slice';
+import RenderIf from '../../utils/RenderIf';
 
 export type FlatFormValues = Record<string, any>;
 
 export default function ScenariosPage() {
-  const email = Cookies.get("email");
-  const username = Cookies.get("name");
+  const email = Cookies.get('email');
+  const username = Cookies.get('name');
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [loading] = useState(false);
@@ -36,7 +37,7 @@ export default function ScenariosPage() {
     useState<RoleplayResponse | null>(null);
   const [currentConversation, setCurrentConversation] =
     useState<RoleplayResponse | null>(null);
-  const [conversationId, setConversationId] = useState<string>("");
+  const [conversationId, setConversationId] = useState<string>('');
 
   const { nickname } = useSelector((state: any) => state.user);
 
@@ -45,7 +46,7 @@ export default function ScenariosPage() {
 
   const { data: totalScenariosData } = useSWR(
     `/quick-roleplay/all/${email}`,
-    fetcherBackend
+    fetcherBackend,
   );
 
   const totalScenariosResult: RoleplayResponse[] = totalScenariosData?.data;
@@ -56,9 +57,9 @@ export default function ScenariosPage() {
 
   const handleClickCreationMode = (mode: Category) => {
     if (mode === Category.Quick) {
-      navigate("/showcase/roleplay/quick-create");
+      navigate('/showcase/roleplay/quick-create');
     } else if (mode === Category.Advanced) {
-      navigate("/showcase/roleplay/advance-create");
+      navigate('/showcase/roleplay/advance-create');
     }
   };
 
@@ -68,17 +69,17 @@ export default function ScenariosPage() {
   };
 
   const handleCreateConversation = async (item: RoleplayResponse) => {
-    const toastId = toast.loading("Creating conversation...", {
-      id: "create-conversation",
+    const toastId = toast.loading('Creating conversation...', {
+      id: 'create-conversation',
       duration: Infinity,
     });
     try {
       setOpenPopoverIndex(null);
       const response = await axiosElwyn.post(
-        "/assessment/scenario-conversation/create",
+        '/assessment/scenario-conversation/create',
         {
           scenario_id: item.id,
-        }
+        },
       );
       toast.dismiss(toastId);
       setConversationId(response.data.data.id);
@@ -111,13 +112,15 @@ export default function ScenariosPage() {
               Create and manage your roleplay scenarios
             </p>
           </div>
-          <a
-            onClick={handleClickNewRoleplay}
-            className="flex items-center gap-x-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-200 cursor-pointer md:mb-0 mb-[20px]"
-          >
-            <PlusIcon className="h-4 w-4" />
-            <span>New Roleplay</span>
-          </a>
+          <RenderIf condition={tempName.includes(currentNickname)}>
+            <button
+              onClick={handleClickNewRoleplay}
+              className="flex items-center gap-x-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-200 cursor-pointer md:mb-0 mb-[20px]"
+            >
+              <PlusIcon className="h-4 w-4" />
+              <span>New Roleplay</span>
+            </button>
+          </RenderIf>
         </div>
         <SearchBar title="Roleplay" showRoleOption />
         <CategoryFilter />
@@ -135,7 +138,7 @@ export default function ScenariosPage() {
                   handleClickRoleplay(item)
                 }
               />
-            )
+            ),
           )}
         </div>
         <AnimatedModal

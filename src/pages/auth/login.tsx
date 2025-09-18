@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import Navbar from "../../components/layout/Navbar";
-import { Mail } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { axiosBackend } from "../../utils/api";
-import Cookies from "js-cookie";
+import Navbar from '../../components/layout/Navbar';
+import { Mail } from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { axiosBackend } from '../../utils/api';
+import Cookies from 'js-cookie';
 
 interface EmailInputProps {
   form: { email: string; password: string };
@@ -14,7 +14,7 @@ interface EmailInputProps {
 }
 
 const EmailInput = ({ form, handleChange }: EmailInputProps) => (
-  <div>
+  <form>
     <label
       htmlFor="email"
       className="block text-sm font-medium mb-1 dark:text-zinc-200"
@@ -48,7 +48,7 @@ const EmailInput = ({ form, handleChange }: EmailInputProps) => (
         onChange={handleChange}
       />
     </div>
-  </div>
+  </form>
 );
 
 const GoogleButton = () => (
@@ -69,15 +69,15 @@ const GoogleButton = () => (
 
 const TermsAndPrivacy = () => (
   <p className="text-xs text-center mt-4 text-zinc-500 dark:text-zinc-400">
-    By joining, you agree to our{" "}
-    <span className="text-purple-600 hover:underline">Terms of Service</span>{" "}
+    By joining, you agree to our{' '}
+    <span className="text-purple-600 hover:underline">Terms of Service</span>{' '}
     and <span className="text-purple-600 hover:underline">Privacy</span>
   </p>
 );
 
 const LoginCard = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,25 +87,25 @@ const LoginCard = () => {
   const handleLogin = async () => {
     setLoading(true);
     const toastId = toast.loading(`Logging in...`, {
-      id: "login",
+      id: 'login',
       duration: Infinity,
     });
     try {
-      const response = await axiosBackend.post("/users/login", {
+      const response = await axiosBackend.post('/users/login', {
         email: form.email,
         password: form.password,
       });
       const result = response.data;
       if (result?.success) {
-        Cookies.set("access_token", result?.accessToken, { expires: 1 });
-        Cookies.set("name", result?.name, { expires: 1 });
-        Cookies.set("refresh_token", result?.refreshToken, { expires: 1 });
-        Cookies.set("email", result?.email, { expires: 1 });
+        Cookies.set('access_token', result?.accessToken, { expires: 1 });
+        Cookies.set('name', result?.name, { expires: 1 });
+        Cookies.set('refresh_token', result?.refreshToken, { expires: 1 });
+        Cookies.set('email', result?.email, { expires: 1 });
         toast.success(`Successfully logged in!`, {
           id: toastId,
           duration: 4000,
         });
-        navigate("/showcase");
+        navigate('/showcase');
       } else {
         toast.error(result?.message, {
           id: toastId,
@@ -133,14 +133,19 @@ const LoginCard = () => {
       <button
         onClick={handleLogin}
         disabled={loading || !form?.email || !form?.password}
-        className="w-full bg-purple-500 cursor-pointer hover:bg-purple-600 text-white font-semibold py-2 rounded-md mb-4 transition text-center"
+        className={[
+          'w-full bg-purple-500 text-white font-semibold py-2 rounded-md mb-4 text-center mt-4 transition-all duration-300',
+          loading || !form?.email || !form?.password
+            ? 'opacity-50 cursor-not-allowed hover:none'
+            : 'hover:bg-purple-600 cursor-pointer',
+        ].join(' ')}
       >
-        {loading ? "Logging in..." : "Continue"}
+        {loading ? 'Logging in...' : 'Continue'}
       </button>
-      <div className="text-center text-sm text-zinc-500 dark:text-zinc-400 mb-4">
+      <div className="text-center text-sm text-zinc-500 dark:text-zinc-400 mb-4 hidden">
         Or continue with your preferred provider
       </div>
-      <GoogleButton />
+      {/* <GoogleButton /> */}
       <TermsAndPrivacy />
     </div>
   );
