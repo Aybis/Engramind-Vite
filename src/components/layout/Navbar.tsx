@@ -33,7 +33,7 @@ export default function Navbar({ showMenu }: NavbarProps) {
   }
 
   return (
-    <nav className="fixed w-full bg-white/30 backdrop-blur-sm bg-opacity-95 z-50 border-b border-gray-100 shadow-sm dark:bg-zinc-950/30 dark:border-zinc-700 ">
+    <nav className="fixed w-full bg-white/30 z-10000 backdrop-blur-sm bg-opacity-95 border-b border-gray-100 shadow-sm dark:bg-zinc-950/30 dark:border-zinc-700 ">
       <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 ">
         {/* Menu Content  */}
         <div className="flex justify-between items-center py-4">
@@ -123,8 +123,8 @@ export default function Navbar({ showMenu }: NavbarProps) {
 
       {/* Mobile menu */}
       <div
-        className={`md:hidden bg-white dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 transition-all duration-300 ${
-          mobileMenuOpen ? "max-h-screen opacity-100" : "max-h-0.5 opacity-0 "
+        className={`md:hidden dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700 transition-all duration-300 ${
+          mobileMenuOpen ? "max-h-screen block" : "hidden"
         }`}
       >
         <div className="px-4 pt-2 pb-3 space-y-1">
