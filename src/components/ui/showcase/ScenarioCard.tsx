@@ -1,6 +1,6 @@
-import { Popover } from "antd";
-import { EllipsisVertical } from "lucide-react";
-import { RoleplayResponse } from "../../../interface";
+import { Popover } from 'antd';
+import { EllipsisVertical } from 'lucide-react';
+import { RoleplayResponse } from '../../../interface';
 
 interface Props {
   item: RoleplayResponse;
@@ -23,16 +23,16 @@ export const ScenarioCard = ({
     <div
       key={item.id}
       onClick={() => onRoleplaySelected(item)}
-      className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
+      className="dark:bg-zinc-800 bg-white/50 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
     >
       <img
         src={
-          item.description.charactersGender === "Male"
+          item.description.charactersGender === 'Male'
             ? `/assets/male_persona.avif`
-            : "/assets/female_persona.webp"
+            : '/assets/female_persona.webp'
         }
         alt="character"
-        className="w-full h-64 object-cover rounded-t-xl"
+        className="w-full h-64 object-cover  content-start rounded-t-xl"
       />
       <div className="p-4">
         <div className="relative flex flex-col gap-y-1">
@@ -46,9 +46,9 @@ export const ScenarioCard = ({
             Gender: {item.description.charactersGender}
           </p>
           <p className="text-sm text-[#4B5563] dark:text-[#D1D5DB]">
-            Visibility:{" "}
+            Visibility:{' '}
             <span className="font-bold">
-              {!item.visibility ? "Private" : "Public"}
+              {!item.visibility ? 'Private' : 'Public'}
             </span>
           </p>
           <div

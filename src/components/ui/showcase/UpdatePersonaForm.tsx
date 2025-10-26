@@ -1,6 +1,6 @@
-import { FormikProps } from "formik";
-import { EditFormValues } from "../../../formik/interface";
-import { AnimatedSpinner } from "../AnimatedSpinner";
+import { FormikProps } from 'formik';
+import { EditFormValues } from '../../../formik/interface';
+import { AnimatedSpinner } from '../AnimatedSpinner';
 
 interface UpdatePersonaForm {
   loading: boolean;
@@ -14,17 +14,35 @@ export const UpdatePersonaForm = ({
   setIsOpen,
 }: UpdatePersonaForm) => {
   const disableButton = loading || !updateFormik.isValid;
+
+  const inputClassName = `w-full border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
+    loading
+      ? 'bg-gray-100 dark:bg-zinc-800 border-gray-200 dark:border-zinc-700 cursor-not-allowed text-gray-500 dark:text-gray-500'
+      : 'bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-white'
+  }`;
+
+  const textareaClassName = `w-full border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 transition-all resize-none placeholder:text-gray-400 dark:placeholder:text-gray-500 ${
+    loading
+      ? 'bg-gray-100 dark:bg-zinc-800 border-gray-200 dark:border-zinc-700 cursor-not-allowed text-gray-500 dark:text-gray-500'
+      : 'bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-white'
+  }`;
+
   return (
-    <form onSubmit={updateFormik.handleSubmit}>
-      <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[15px]">
+    <form
+      onSubmit={updateFormik.handleSubmit}
+      className="h-[72vh] bg-white dark:bg-zinc-900 p-8 rounded-2xl w-4xl shadow-2xl"
+    >
+      <h2 className="text-2xl font-bold flex items-center gap-2 text-gray-900 dark:text-white mb-6">
         Edit Persona: {updateFormik.values.name}
       </h2>
-      <div className="gap-y-3 flex flex-col">
+
+      {/* form content */}
+      <div className="gap-y-4 flex flex-col h-[55vh] overflow-y-scroll px-2">
         <div className="flex gap-x-4 w-full">
           <div className="w-full">
             <label
               htmlFor="persona_name"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Name
             </label>
@@ -35,19 +53,15 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.persona_name}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter persona name"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Raditya Dika"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="age"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Age
             </label>
@@ -56,17 +70,13 @@ export const UpdatePersonaForm = ({
               name="age"
               value={updateFormik.values.age}
               onChange={(e) => {
-                const digitsOnly = e.target.value.replace(/\D/g, "");
-                updateFormik.setFieldValue("age", digitsOnly);
+                const digitsOnly = e.target.value.replace(/\D/g, '');
+                updateFormik.setFieldValue('age', digitsOnly);
               }}
               onBlur={updateFormik.handleBlur}
               type="text"
-              placeholder="Enter persona name"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="38"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
@@ -75,7 +85,7 @@ export const UpdatePersonaForm = ({
           <div className="w-full">
             <label
               htmlFor="gender"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Gender
             </label>
@@ -86,19 +96,15 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.gender}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter persona name"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Male"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="occupation"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Occupation
             </label>
@@ -109,12 +115,8 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.occupation}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter occupation"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Writer, Comedian, Filmmaker"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
@@ -123,7 +125,7 @@ export const UpdatePersonaForm = ({
           <div className="w-full">
             <label
               htmlFor="language"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Language
             </label>
@@ -134,19 +136,15 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.language}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter language"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Bahasa Indonesia (Iasth)"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="hometown"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Hometown
             </label>
@@ -157,12 +155,8 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.hometown}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter hometown"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Jakarta, Indonesia"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
@@ -171,7 +165,7 @@ export const UpdatePersonaForm = ({
           <div className="w-full">
             <label
               htmlFor="birthdate"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Birthdate
             </label>
@@ -182,19 +176,15 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.birthdate}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter birthdate"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="28-12-1984"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="nationality"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Nationality
             </label>
@@ -205,12 +195,8 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.nationality}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter nationality"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Indonesian"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
@@ -219,7 +205,7 @@ export const UpdatePersonaForm = ({
           <div className="w-full">
             <label
               htmlFor="background"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Background
             </label>
@@ -230,12 +216,8 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.background}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter background"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder='--- Input Content Provided: ---&#10;As the "Neurotic Male," Raditya Dika is the writer who pioneered Indonesia&apos;s "comedy diary" genre...'
+              className={textareaClassName}
               disabled={loading}
             />
           </div>
@@ -244,7 +226,7 @@ export const UpdatePersonaForm = ({
           <div className="w-full">
             <label
               htmlFor="scenarioSnippet"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Scenario Snippet
             </label>
@@ -255,24 +237,20 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.scenarioSnippet}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter scenario snippet"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Raditya is asked to give a commencement speech..."
+              className={textareaClassName}
               disabled={loading}
             />
           </div>
         </div>
-        <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white">
+        <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white mt-2">
           Personality traits
         </h2>
         <div className="flex gap-x-4 w-full">
           <div className="w-full">
             <label
               htmlFor="mbtiType"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               MBTI Type
             </label>
@@ -283,19 +261,15 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.mbtiType}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter MBTI type"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="ENFP"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="enneagramType"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Enneagram Type
             </label>
@@ -306,24 +280,20 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.enneagramType}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter enneagram type"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="7w6"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
         </div>
-        <h2 className="text-md flex items-center gap-2 text-gray-900 dark:text-white">
+        <h2 className="text-base font-semibold flex items-center gap-2 text-gray-900 dark:text-white mt-2">
           Big Five Personality Scores (1-100)
         </h2>
         <div className="grid grid-cols-3 gap-4 w-full">
           <div className="w-full">
             <label
               htmlFor="openness"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Openness
             </label>
@@ -333,23 +303,19 @@ export const UpdatePersonaForm = ({
               id="openness"
               value={updateFormik.values.openness}
               onChange={(e) => {
-                const digitsOnly = e.target.value.replace(/\D/g, "");
-                updateFormik.setFieldValue("openness", digitsOnly);
+                const digitsOnly = e.target.value.replace(/\D/g, '');
+                updateFormik.setFieldValue('openness', digitsOnly);
               }}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter openness"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="75"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="conscientiousness"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Conscientiousness
             </label>
@@ -359,23 +325,19 @@ export const UpdatePersonaForm = ({
               id="conscientiousness"
               value={updateFormik.values.conscientiousness}
               onChange={(e) => {
-                const digitsOnly = e.target.value.replace(/\D/g, "");
-                updateFormik.setFieldValue("conscientiousness", digitsOnly);
+                const digitsOnly = e.target.value.replace(/\D/g, '');
+                updateFormik.setFieldValue('conscientiousness', digitsOnly);
               }}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter conscientiousness"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="50"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="extraversion"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Extraversion
             </label>
@@ -385,23 +347,19 @@ export const UpdatePersonaForm = ({
               id="extraversion"
               value={updateFormik.values.extraversion}
               onChange={(e) => {
-                const digitsOnly = e.target.value.replace(/\D/g, "");
-                updateFormik.setFieldValue("extraversion", digitsOnly);
+                const digitsOnly = e.target.value.replace(/\D/g, '');
+                updateFormik.setFieldValue('extraversion', digitsOnly);
               }}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter extraversion"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="70"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="agreeableness"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Agreeableness
             </label>
@@ -411,23 +369,19 @@ export const UpdatePersonaForm = ({
               id="agreeableness"
               value={updateFormik.values.agreeableness}
               onChange={(e) => {
-                const digitsOnly = e.target.value.replace(/\D/g, "");
-                updateFormik.setFieldValue("agreeableness", digitsOnly);
+                const digitsOnly = e.target.value.replace(/\D/g, '');
+                updateFormik.setFieldValue('agreeableness', digitsOnly);
               }}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter agreeableness"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="60"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="neuroticism"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Neuroticism
             </label>
@@ -438,15 +392,11 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.neuroticism}
               onBlur={updateFormik.handleBlur}
               onChange={(e) => {
-                const digitsOnly = e.target.value.replace(/\D/g, "");
-                updateFormik.setFieldValue("neuroticism", digitsOnly);
+                const digitsOnly = e.target.value.replace(/\D/g, '');
+                updateFormik.setFieldValue('neuroticism', digitsOnly);
               }}
-              placeholder="Enter neuroticism"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="80"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
@@ -455,7 +405,7 @@ export const UpdatePersonaForm = ({
           <div className="w-full">
             <label
               htmlFor="skillsAndAbilities"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Skills and Abilities
             </label>
@@ -466,12 +416,8 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.skillsAndAbilities}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter skills and abilities"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Enter skills and abilities..."
+              className={textareaClassName}
               disabled={loading}
             />
           </div>
@@ -480,7 +426,7 @@ export const UpdatePersonaForm = ({
           <div className="w-full">
             <label
               htmlFor="motivationsAndGoals"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Motivations and Goals
             </label>
@@ -491,24 +437,20 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.motivationsAndGoals}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter motivations and goals"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Enter motivations and goals..."
+              className={textareaClassName}
               disabled={loading}
             />
           </div>
         </div>
-        <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white">
+        <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white mt-2">
           Physical Description
         </h2>
         <div className="grid grid-cols-3 gap-4 w-full">
           <div className="w-full">
             <label
               htmlFor="build"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Build
             </label>
@@ -519,19 +461,15 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.build}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter build"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Athletic"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="height"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Height
             </label>
@@ -542,19 +480,15 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.height}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter height"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="175 cm"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="eyeColor"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Eye Color
             </label>
@@ -565,19 +499,15 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.eyeColor}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter eye color"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Brown"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="skinTone"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Skin Tone
             </label>
@@ -588,19 +518,15 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.skinTone}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter skin tone"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Fair"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="hairColor"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Hair Color
             </label>
@@ -611,19 +537,15 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.hairColor}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter hair color"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Black"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
           <div className="w-full">
             <label
               htmlFor="hairStyle"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Hair Style
             </label>
@@ -634,12 +556,8 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.hairStyle}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter hair style"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Short and wavy"
+              className={inputClassName}
               disabled={loading}
             />
           </div>
@@ -648,7 +566,7 @@ export const UpdatePersonaForm = ({
           <div className="w-full">
             <label
               htmlFor="typicalAttire"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Typical Attire
             </label>
@@ -659,12 +577,8 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.typicalAttire}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter typical attire"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Enter typical attire..."
+              className={textareaClassName}
               disabled={loading}
             />
           </div>
@@ -673,7 +587,7 @@ export const UpdatePersonaForm = ({
           <div className="w-full">
             <label
               htmlFor="distinguishingFeatures"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Distinguishing Features
             </label>
@@ -684,12 +598,8 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.distinguishingFeatures}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter distinguishing features"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Enter distinguishing features..."
+              className={textareaClassName}
               disabled={loading}
             />
           </div>
@@ -698,7 +608,7 @@ export const UpdatePersonaForm = ({
           <div className="w-full">
             <label
               htmlFor="industryRelevance"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Industry Relevance
             </label>
@@ -709,12 +619,8 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.industryRelevance}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter industry relevance"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Enter industry relevance..."
+              className={textareaClassName}
               disabled={loading}
             />
           </div>
@@ -723,7 +629,7 @@ export const UpdatePersonaForm = ({
           <div className="w-full">
             <label
               htmlFor="relevanceToScenario"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Relevance To Scenario
             </label>
@@ -734,12 +640,8 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.relevanceToScenario}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter relevance to scenario"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Enter relevance to scenario..."
+              className={textareaClassName}
               disabled={loading}
             />
           </div>
@@ -748,7 +650,7 @@ export const UpdatePersonaForm = ({
           <div className="w-full">
             <label
               htmlFor="challengesAndGrowthAreas"
-              className="block mb-1 text-gray-700 text-md dark:text-white"
+              className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Challenges and Growth Areas
             </label>
@@ -759,38 +661,36 @@ export const UpdatePersonaForm = ({
               value={updateFormik.values.challengesAndGrowthAreas}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
-              placeholder="Enter challenges and growth areas"
-              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-                loading
-                  ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
-                  : "dark:bg-zinc-800 bg-zinc-50"
-              }`}
+              placeholder="Enter challenges and growth areas..."
+              className={textareaClassName}
               disabled={loading}
             />
           </div>
         </div>
-        <div className="dark:bg-[#88888850] bg-zinc-200 h-[1px] w-full" />
-        <div className="mt-3 flex gap-x-2 justify-end">
-          <button
-            type="button"
-            onClick={() => setIsOpen(false)}
-            className="px-4 py-2 h-fit cursor-pointer bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-zinc-600"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={disableButton}
-            className={`bg-purple-600 flex gap-x-2 items-center text-white px-4 py-2 rounded cursor-pointer ${
-              disableButton
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-purple-700"
-            }`}
-          >
-            <AnimatedSpinner show={loading} />
-            Save Changes
-          </button>
-        </div>
+        <div className="dark:bg-[#88888850] bg-zinc-200 h-px w-full" />
+      </div>
+
+      {/* button  */}
+      <div className="pt-2 flex gap-3 justify-end  dark:bg-zinc-900 border-t border-zinc-200">
+        <button
+          type="button"
+          onClick={() => setIsOpen(false)}
+          className="px-5 py-2.5 cursor-pointer bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition-all duration-200 font-medium border border-gray-300 dark:border-zinc-600"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={disableButton}
+          className={`px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
+            disableButton
+              ? 'bg-purple-300 dark:bg-purple-900/40 text-white cursor-not-allowed opacity-60'
+              : 'bg-purple-600 hover:bg-purple-700 text-white shadow-md hover:shadow-lg'
+          }`}
+        >
+          <AnimatedSpinner show={loading} />
+          Save Changes
+        </button>
       </div>
     </form>
   );

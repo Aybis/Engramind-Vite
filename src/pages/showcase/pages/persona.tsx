@@ -85,6 +85,7 @@ export default function PersonaPage() {
             setIsOpen(false);
             resetForm();
             clearInterval(updatePersonaInterval);
+            setIsOpenEditPersona(false);
           } else if (personaResult.jobStatus === JobStatus.Failed) {
             setLoading(false);
             toast.error('Persona failed to be updated. Please try again.', {
@@ -164,80 +165,86 @@ export default function PersonaPage() {
   }, [nickname]);
 
   return (
-    <ShowcaseLayout>
-      <div>
-        <div className="flex md:flex-row flex-col justify-between items-center mb-2">
-          {/* Heading */}
-          <div>
-            <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {formatNickname(currentNickname)}
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Curated profiles. Proven expertise. Find and connect with your AI
-              Mentor, at your own time.
-            </p>
-          </div>
+    <>
+      <ShowcaseLayout>
+        <div>
+          <div className="flex md:flex-row flex-col justify-between items-center mb-2">
+            {/* Heading */}
+            <div>
+              <h1 className="text-3xl font-bold mb-2 capitalize">
+                Welcome, {formatNickname(currentNickname)}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                Curated profiles. Proven expertise. Find and connect with your
+                AI Mentor, at your own time.
+              </p>
+            </div>
 
-          <RenderIf condition={tempName.includes(currentNickname)}>
-            <button
-              onClick={() => {
-                setIsOpen(true);
-              }}
-              className="flex items-center gap-x-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-200 cursor-pointer md:mb-0 mb-[20px]"
-            >
-              <PlusIcon className="h-4 w-4" />
-              <span>New Persona</span>
-            </button>
-          </RenderIf>
+            <RenderIf condition={tempName.includes(currentNickname)}>
+              <button
+                onClick={() => {
+                  setIsOpen(true);
+                }}
+                className="flex items-center gap-x-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-200 cursor-pointer md:mb-0 mb-5"
+              >
+                <PlusIcon className="h-4 w-4" />
+                <span>New Persona</span>
+              </button>
+            </RenderIf>
+          </div>
+          <SearchBar title="Persona" />
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {totalPersonaResult?.map((item: PersonaData) => (
+              <ItemCard
+                key={item.id}
+                itemType={ItemType.Persona}
+                item={item}
+                handleSelect={handleSelectedPersona}
+              />
+            ))}
+          </div>
+          <Relic />
         </div>
-        <SearchBar title="Persona" />
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {totalPersonaResult?.map((item: PersonaData) => (
-            <ItemCard
-              key={item.id}
-              itemType={ItemType.Persona}
-              item={item}
-              handleSelect={handleSelectedPersona}
-            />
-          ))}
-        </div>
-        <Relic />
-        <AnimatedModal
-          isOpen={isOpen}
-          onClose={() => {
-            setIsOpen(false);
-          }}
-        >
-          <CreatePersonaForm
-            loading={loading}
-            createFormik={createFormik}
-            setIsOpen={setIsOpen}
-            uploading={uploading}
-            setUploading={setUploading}
-          />
-        </AnimatedModal>
-        <AnimatedModal
-          className="h-[85vh] overflow-scroll"
-          isOpen={isOpenEditPersona}
-          onClose={() => setIsOpenEditPersona(false)}
-        >
-          <UpdatePersonaForm
-            loading={loading}
-            updateFormik={updateFormik}
-            setIsOpen={setIsOpenEditPersona}
-          />
-        </AnimatedModal>
-        <AnimatedModal
-          className="h-[85vh] overflow-scroll"
-          isOpen={isOpenPersonaDetails}
-          onClose={() => setIsOpenPersonaDetails(false)}
-        >
-          <PersonaDetails
-            onEditPress={handleEditPersona}
-            persona={selectedPersona}
-          />
-        </AnimatedModal>
-      </div>
-    </ShowcaseLayout>
+      </ShowcaseLayout>
+
+      {/* Modals rendered outside ShowcaseLayout to overlay entire screen */}
+      <AnimatedModal
+        usingBackgroundWCard={false}
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+        }}
+      >
+        <CreatePersonaForm
+          loading={loading}
+          createFormik={createFormik}
+          setIsOpen={setIsOpen}
+          uploading={uploading}
+          setUploading={setUploading}
+        />
+      </AnimatedModal>
+      <AnimatedModal
+        usingBackgroundWCard={false}
+        // className=" overflow-scroll"
+        isOpen={isOpenEditPersona}
+        onClose={() => setIsOpenEditPersona(false)}
+      >
+        <UpdatePersonaForm
+          loading={loading}
+          updateFormik={updateFormik}
+          setIsOpen={setIsOpenEditPersona}
+        />
+      </AnimatedModal>
+      <AnimatedModal
+        usingBackgroundWCard={false}
+        isOpen={isOpenPersonaDetails}
+        onClose={() => setIsOpenPersonaDetails(false)}
+      >
+        <PersonaDetails
+          onEditPress={handleEditPersona}
+          persona={selectedPersona}
+        />
+      </AnimatedModal>
+    </>
   );
 }

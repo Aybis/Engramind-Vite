@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export const ModalProgress = ({
   setShowLoadingModal,
@@ -11,20 +11,20 @@ export const ModalProgress = ({
         className="w-full h-64"
         width={1241}
         height={619}
-        src={"/assets/prepare.gif"}
+        src={'/assets/prepare.gif'}
         alt="Preparing your persona"
       />
-      <div className="font-bold text-md text-zinc-100 dark:text-white">
+      <div className="font-bold text-md text-gray-900 dark:text-white">
         This process will take about 1 to 2 minutes
       </div>
-      <div className="font-light text-sm text-zinc-200 dark:text-gray-300">
+      <div className="font-light text-sm text-gray-600 dark:text-gray-300">
         {
-          "If you don't want to wait, you can close this, and we will notify you when it’s done"
+          "If you don't want to wait, you can close this, and we will notify you when it's done"
         }
       </div>
       <button
         type="button"
-        className="bg-zinc-700 cursor-pointer hover:bg-zinc-600 text-white px-4 py-2 rounded-full"
+        className="bg-zinc-800 cursor-pointer hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-white px-4 py-2 rounded-full transition-colors"
         onClick={() => setShowLoadingModal(false)}
       >
         Close

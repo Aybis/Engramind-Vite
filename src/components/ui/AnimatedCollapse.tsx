@@ -1,7 +1,7 @@
 // src/components/Collapse.tsx
-import { useState } from "react";
-import { ChevronDown } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface CollapseProps {
   title: string;
@@ -14,13 +14,13 @@ export const AnimatedCollapse = ({ title, children }: CollapseProps) => {
   return (
     <div
       onClick={() => setIsOpen((prevState) => !prevState)}
-      className="w-full cursor-pointer border border-[#88888850] mx-auto bg-white dark:bg-zinc-800 shadow-xl rounded-2xl p-4 mb-4 group"
+      className="w-full cursor-pointer mx-auto bg-white dark:bg-zinc-800 shadow-xl rounded-2xl p-4 mb-4 group"
     >
       <button
         type="button"
         className="w-full cursor-pointer flex justify-between items-center text-left"
       >
-        <span className="text-md font-semibold group-hover:underline">
+        <span className="text-md font-semibold group-hover:underline text-zinc-800 dark:text-zinc-200">
           {title}
         </span>
         <motion.div
@@ -36,7 +36,7 @@ export const AnimatedCollapse = ({ title, children }: CollapseProps) => {
           <motion.div
             key="content"
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
+            animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
             className="overflow-hidden mt-2 text-sm text-zinc-700 dark:text-zinc-300"

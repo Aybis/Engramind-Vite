@@ -10,35 +10,35 @@ import {
   Scroll,
   Signal,
   Tag,
-} from "lucide-react";
-import { JSX } from "react";
+} from 'lucide-react';
+import { JSX } from 'react';
 
 const categories = [
-  "Art & Design", //pallete
-  "Accounting", //hand-coins
-  "Business", //briefcase-business
-  "Data", //database
-  "Finance", //circle-dollar-sign
-  "Human Resource", //person-standing
-  "IT & Engineering", //computer
-  "Law & Consulting", //scroll
-  "Marketing", //tag
-  "Product", //pencil-ruler
-  "Sales & Ops", //signal
+  'Art & Design', //pallete
+  'Accounting', //hand-coins
+  'Business', //briefcase-business
+  'Data', //database
+  'Finance', //circle-dollar-sign
+  'Human Resource', //person-standing
+  'IT & Engineering', //computer
+  'Law & Consulting', //scroll
+  'Marketing', //tag
+  'Product', //pencil-ruler
+  'Sales & Ops', //signal
 ];
 
 const categoryIcons: { [key: string]: JSX.Element } = {
-  "Art & Design": <Palette className="w-4 h-4 mr-1" />,
+  'Art & Design': <Palette className="w-4 h-4 mr-1" />,
   Accounting: <HandCoins className="w-4 h-4 mr-1" />,
   Business: <BriefcaseBusiness className="w-4 h-4 mr-1" />,
   Data: <Database className="w-4 h-4 mr-1" />,
   Finance: <CircleDollarSign className="w-4 h-4 mr-1" />,
-  "Human Resource": <PersonStanding className="w-4 h-4 mr-1" />,
-  "IT & Engineering": <Computer className="w-4 h-4 mr-1" />,
-  "Law & Consulting": <Scroll className="w-4 h-4 mr-1" />,
+  'Human Resource': <PersonStanding className="w-4 h-4 mr-1" />,
+  'IT & Engineering': <Computer className="w-4 h-4 mr-1" />,
+  'Law & Consulting': <Scroll className="w-4 h-4 mr-1" />,
   Marketing: <Tag className="w-4 h-4 mr-1" />,
   Product: <PencilRuler className="w-4 h-4 mr-1" />,
-  "Sales & Ops": <Signal className="w-4 h-4 mr-1" />,
+  'Sales & Ops': <Signal className="w-4 h-4 mr-1" />,
 };
 
 export const CategoryFilter = () => (
@@ -46,7 +46,7 @@ export const CategoryFilter = () => (
     {categories.map((cat) => (
       <button
         key={cat}
-        className="flex cursor-pointer items-center text-sm px-3 py-1 rounded-full bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900 dark:text-purple-300 dark:hover:bg-purple-800"
+        className="flex cursor-pointer items-center text-sm px-4 py-2 rounded-full bg-purple-500/20 dark:bg-purple-600/20 backdrop-blur-xl border border-purple-300/30 dark:border-purple-500/30 text-purple-700 dark:text-purple-300 hover:bg-purple-500/30 dark:hover:bg-purple-600/30 hover:border-purple-400/40 dark:hover:border-purple-400/40 transition-all shadow-sm"
       >
         {categoryIcons[cat]}
         {cat}
