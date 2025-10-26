@@ -1,6 +1,6 @@
-import React, { ReactNode, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { backdrop, modal } from "../../utils/uiHelper";
+import React, { ReactNode, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { backdrop, modal } from '../../utils/uiHelper';
 
 interface AnimatedModalProps {
   isOpen: boolean;
@@ -10,6 +10,7 @@ interface AnimatedModalProps {
   showCrossIcon?: boolean;
   className?: string;
   customWidth?: string;
+  usingBackgroundWCard?: boolean;
 }
 
 export const AnimatedModal = ({
@@ -19,12 +20,13 @@ export const AnimatedModal = ({
   widthFitContainer = false,
   showCrossIcon = true,
   className,
-  customWidth = "",
+  customWidth = '',
+  usingBackgroundWCard = true,
 }: AnimatedModalProps) => {
   useEffect(() => {
-    const handleEsc = (e: any) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", handleEsc);
-    return () => document.removeEventListener("keydown", handleEsc);
+    const handleEsc = (e: any) => e.key === 'Escape' && onClose();
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
   }, [onClose]);
 
   return (
@@ -39,13 +41,18 @@ export const AnimatedModal = ({
           onClick={onClose}
         >
           <motion.div
-            className={`${className} absolute border dark:border-zinc-700 border-zinc-200 top-1/2 left-1/2 bg-[#FEFEFE] dark:bg-[#101213] rounded-2xl shadow-xl p-6 ${
+            className={[
+              className,
+              'absolute top-1/2 left-1/2 max-w-7xl',
               customWidth
                 ? customWidth
                 : widthFitContainer
-                ? "w-full md:w-fit"
-                : "w-full lg:w-[80%]"
-            }`}
+                ? 'w-full md:w-fit'
+                : 'w-full lg:w-full',
+              usingBackgroundWCard
+                ? ' bg-white dark:bg-zinc-900 border dark:border-zinc-700 border-zinc-200 rounded-2xl  p-6'
+                : 'bg-none',
+            ].join('')}
             variants={modal}
             initial="hidden"
             animate="visible"

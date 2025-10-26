@@ -1,5 +1,5 @@
-import { Scenario, DetailDescription } from "../../../interface/scenario";
-import React from "react";
+import { Scenario, DetailDescription } from '../../../interface/scenario';
+import React from 'react';
 
 export default function ModalDetailRelic({
   selectedScenario,
@@ -27,7 +27,7 @@ export default function ModalDetailRelic({
             {/* Icon Solana */}
             <div className="flex items-center gap-x-2">
               <img
-                src={"assets/coin.svg"}
+                src={'assets/coin.svg'}
                 alt="solana"
                 className="w-6 h-6"
                 width={30}
@@ -59,7 +59,7 @@ export default function ModalDetailRelic({
                 {selectedScenario?.name}
               </h2>
               <p className="text-base italic dark:text-zinc-300 text-zinc-800 ">
-                My Name {detailDescription?.charactersName}, I am{" "}
+                My Name {detailDescription?.charactersName}, I am{' '}
                 {detailDescription?.charactersAge} years old.
               </p>
               <p className="text-sm dark:text-zinc-400 text-zinc-700">
@@ -78,7 +78,7 @@ export default function ModalDetailRelic({
                 Gender : {detailDescription?.charactersGender}
               </p>
               <p className="text-sm dark:text-zinc-400 text-zinc-700">
-                Occupation :{detailDescription?.charactersOccupation}{" "}
+                Occupation :{detailDescription?.charactersOccupation}{' '}
               </p>
             </div>
 
@@ -87,13 +87,13 @@ export default function ModalDetailRelic({
                 Scenario Details
               </h3>
               <p className="text-sm dark:text-zinc-300 text-zinc-700 font-semibold">
-                Scenario Snippet :{" "}
+                Scenario Snippet :{' '}
                 <span className="font-normal dark:text-zinc-400 text-zinc-700">
                   {detailDescription?.charactersScenarioSnippet}
                 </span>
               </p>
               <p className="text-sm dark:text-zinc-300 text-zinc-700 font-semibold mt-2">
-                Relevance To Persona :{" "}
+                Relevance To Persona :{' '}
                 <span className="font-normal dark:text-zinc-400 text-zinc-700">
                   {detailDescription?.charactersRelevanceToScenario}
                 </span>

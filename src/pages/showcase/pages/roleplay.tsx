@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useEffect, useState, useRef } from "react";
-import { Scenario, DetailDescription } from "../../../interface/scenario";
-import { useParams } from "react-router-dom";
+import React from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { Scenario, DetailDescription } from '../../../interface/scenario';
+import { useParams } from 'react-router-dom';
 
 export default function RoleplayDetail() {
   const [volume, setVolume] = useState(0);
-  const [transcript, setTranscript] = useState("");
+  const [transcript, setTranscript] = useState('');
   const [listening, setListening] = useState(false);
 
   const params = useParams();
@@ -24,8 +24,8 @@ export default function RoleplayDetail() {
       try {
         const res = await fetch(`/api/ai/scenario/${scenarioId}`, {
           headers: {
-            "X-AI_TOKEN": import.meta.env.NEXT_PUBLIC_AI_KEY || "",
-            "X-REQUEST_FROM": "AI_TOKEN",
+            'X-AI_TOKEN': import.meta.env.NEXT_PUBLIC_AI_KEY || '',
+            'X-REQUEST_FROM': 'AI_TOKEN',
           },
         });
         const data = await res.json();
@@ -35,7 +35,7 @@ export default function RoleplayDetail() {
           setscenarioDescription(JSON.parse(data.description));
         }
       } catch (err) {
-        console.error("Failed to fetch scenario:", err);
+        console.error('Failed to fetch scenario:', err);
       }
     };
 
@@ -48,7 +48,7 @@ export default function RoleplayDetail() {
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
-  const dataArrayRef = useRef<Uint8Array | null>(null);
+  const dataArrayRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
   const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -60,7 +60,8 @@ export default function RoleplayDetail() {
         const source = audioContext.createMediaStreamSource(stream);
 
         analyser.fftSize = 128;
-        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(new ArrayBuffer(bufferLength));
 
         audioContextRef.current = audioContext;
         analyserRef.current = analyser;
@@ -80,7 +81,7 @@ export default function RoleplayDetail() {
 
         updateVolume();
       })
-      .catch((err) => console.error("Microphone error:", err));
+      .catch((err) => console.error('Microphone error:', err));
 
     return () => {
       if (animationFrameRef.current) {
@@ -122,7 +123,7 @@ export default function RoleplayDetail() {
             Current Scenario
           </p>
           <p className="text-sm text-zinc-700 dark:text-zinc-200">
-            {scenarioDescription?.scenarioDetails["Overview"]}
+            {scenarioDescription?.scenarioDetails['Overview']}
           </p>
         </div>
 
@@ -134,13 +135,13 @@ export default function RoleplayDetail() {
                   new // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   (window as any).webkitSpeechRecognition();
                 recognition.continuous = true;
-                recognition.lang = "id-ID";
+                recognition.lang = 'id-ID';
                 recognition.interimResults = true;
 
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 recognition.onresult = (event: any) => {
-                  let interim = "";
-                  let final = "";
+                  let interim = '';
+                  let final = '';
 
                   for (
                     let i = event.resultIndex;
@@ -149,7 +150,7 @@ export default function RoleplayDetail() {
                   ) {
                     const result = event.results[i];
                     if (result.isFinal) {
-                      final += result[0].transcript + " ";
+                      final += result[0].transcript + ' ';
                     } else {
                       interim += result[0].transcript;
                     }
@@ -172,12 +173,12 @@ export default function RoleplayDetail() {
             }}
             className={`inline-flex items-center justify-center w-10 h-10 text-white rounded-full ${
               listening
-                ? "bg-red-600 hover:bg-red-700"
-                : "bg-green-600 hover:bg-green-700"
+                ? 'bg-red-600 hover:bg-red-700'
+                : 'bg-green-600 hover:bg-green-700'
             }`}
             aria-label="Toggle Microphone"
           >
-            {listening ? "⏹️" : "▶️"}
+            {listening ? '⏹️' : '▶️'}
           </button>
           <p className="text-green-600 text-sm">🎤 Microphone connected</p>
           <p className="text-xs text-zinc-500 italic">
@@ -199,7 +200,7 @@ export default function RoleplayDetail() {
               Transcription:
             </p>
             <p className="text-sm text-zinc-900 dark:text-white italic">
-              {transcript || "..."}
+              {transcript || '...'}
             </p>
           </div>
         </div>

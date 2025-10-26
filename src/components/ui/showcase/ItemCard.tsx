@@ -1,5 +1,5 @@
-import { LucideBook, LucideCalculator, LucideSpeech } from "lucide-react";
-import { ItemType } from "../../../utils/helper";
+import { LucideBook, LucideCalculator, LucideSpeech } from 'lucide-react';
+import { ItemType } from '../../../utils/helper';
 
 interface Props {
   item: any;
@@ -21,7 +21,7 @@ export const ItemCard = ({ item, handleSelect, itemType }: Props) => {
     <div
       key={item.id}
       onClick={() => handleSelect(item)}
-      className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
+      className="dark:bg-zinc-800 bg-white/50 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
     >
       <div className="p-4">
         <>
