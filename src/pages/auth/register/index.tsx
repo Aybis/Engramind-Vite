@@ -1,50 +1,82 @@
-"use client";
+'use client';
 
-import Navbar from "../../../components/layout/Navbar";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { axiosBackend } from "../../../utils/api";
-import { toast } from "sonner";
-import { cleanErrorMessage } from "../../../utils/helper";
+import Navbar from '../../../components/layout/Navbar';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { axiosBackend } from '../../../utils/api';
+import { toast } from 'sonner';
+import { cleanErrorMessage } from '../../../utils/helper';
+import { UserPlus } from 'lucide-react';
 
-export const RegisterPage = () => {
+const INPUT_CLASS =
+  'w-full px-4 py-3 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-600 focus:border-transparent transition-all';
+const LABEL_CLASS =
+  'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2';
+
+const FormInput = ({
+  id,
+  type,
+  placeholder,
+  value,
+  onChange,
+}: {
+  id: string;
+  type: string;
+  placeholder: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) => (
+  <div>
+    <label htmlFor={id} className={LABEL_CLASS}>
+      {id.charAt(0).toUpperCase() + id.slice(1)}
+    </label>
+    <input
+      type={type}
+      id={id}
+      placeholder={placeholder}
+      className={INPUT_CLASS}
+      value={value}
+      onChange={onChange}
+      required
+    />
+  </div>
+);
+
+const RegisterCard = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.id]: e.target.value });
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (loading || Object.values(form).some((v) => !v)) return;
+
     setLoading(true);
-    const toastId = toast.loading(`Registering...`, {
-      id: "register",
+    const toastId = toast.loading('Registering...', {
+      id: 'register',
       duration: Infinity,
     });
+
     try {
-      const response = await axiosBackend.post("/users/register", {
-        name: form.name,
-        email: form.email,
-        password: form.password,
-        method: "email-password",
+      const { data } = await axiosBackend.post('/users/register', {
+        ...form,
+        method: 'email-password',
       });
-      const result = response.data;
-      if (result?.success) {
-        toast.success(`Successfully registered!`, {
+
+      if (data?.success) {
+        toast.success('Successfully registered!', {
           id: toastId,
           duration: 4000,
         });
-        navigate("/auth/login");
+        navigate('/auth/login');
       } else {
-        toast.error(cleanErrorMessage(result?.message), {
+        toast.error(cleanErrorMessage(data?.message) || 'Registration failed', {
           id: toastId,
           duration: 4000,
         });
       }
     } catch (error) {
-      toast.error(`Something went wrong. ${error?.toString()}`, {
+      toast.error(`Something went wrong. ${error}`, {
         id: toastId,
         duration: 4000,
       });
@@ -53,109 +85,105 @@ export const RegisterPage = () => {
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+  };
+
+  const isDisabled = loading || Object.values(form).some((v) => !v);
+
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 text-gray-800 font-sans">
-      {/* Navigation */}
-      <Navbar showMenu={false} />
-      <section className="flex justify-center items-center min-h-[calc(100vh-64px)] px-4">
-        <div className="max-w-md mt-[75px] md:mt-0 w-full bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-zinc-200 dark:border-zinc-700 shadow-sm">
-          <h1 className="text-center text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-6">
-            One sign-up.
-            <br />A lifetime of impact.
-          </h1>
+    <div className="w-full max-w-md bg-white/70 dark:bg-zinc-900/50 backdrop-blur-2xl p-10 rounded-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/10">
+      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-2">
+        <UserPlus className="w-5 h-5" />
+        <span className="text-sm">Create an account</span>
+      </div>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <InputField
-              id="name"
-              label="Your Name"
-              type="text"
-              placeholder="Johnny Silverhand"
-              required
-              value={form.name}
-              onChange={handleChange}
-            />
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+        Sign Up
+      </h1>
 
-            <InputField
-              id="email"
-              label="Your Email"
-              type="email"
-              placeholder="johnny@example.com"
-              required
-              value={form.email}
-              onChange={handleChange}
-            />
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <FormInput
+          id="name"
+          type="text"
+          placeholder="Enter your name"
+          value={form.name}
+          onChange={handleChange}
+        />
+        <FormInput
+          id="email"
+          type="email"
+          placeholder="Enter your email"
+          value={form.email}
+          onChange={handleChange}
+        />
+        <FormInput
+          id="password"
+          type="password"
+          placeholder="••••••••"
+          value={form.password}
+          onChange={handleChange}
+        />
 
-            <InputField
-              id="password"
-              label="Your Password"
-              type="password"
-              placeholder="********"
-              required
-              value={form.password}
-              onChange={handleChange}
-            />
+        <button
+          type="submit"
+          disabled={isDisabled}
+          className={`w-full py-3 rounded-xl font-semibold text-white transition-all duration-200 ${
+            isDisabled
+              ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed'
+              : 'bg-purple-600 hover:bg-purple-700 shadow-lg hover:shadow-xl'
+          }`}
+        >
+          {loading ? 'Registering...' : 'Sign Up'}
+        </button>
 
-            <button
-              type="submit"
-              className="w-full cursor-pointer bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 rounded-md transition text-center"
-              disabled={loading || !form.password || !form.email || !form.name}
-            >
-              {loading ? "Registering..." : "Continue"}
-            </button>
-          </form>
-
-          <p className="text-xs text-center mt-4 text-zinc-500 dark:text-zinc-400">
-            By joining, you agree to our{" "}
-            <a href="#" className="text-purple-600 hover:underline">
-              Terms of Service
-            </a>{" "}
-            and{" "}
-            <a href="#" className="text-purple-600 hover:underline">
-              Privacy
-            </a>
-          </p>
+        <div className="text-center">
+          <span className="text-sm text-gray-600 dark:text-gray-400">
+            Already have an account?{' '}
+          </span>
+          <button
+            type="button"
+            onClick={() => navigate('/auth/login')}
+            className="text-sm text-purple-600 dark:text-purple-400 hover:underline font-medium"
+          >
+            Sign In
+          </button>
         </div>
-      </section>
+      </form>
+
+      <p className="text-xs text-center mt-6 text-gray-500 dark:text-gray-400">
+        By joining, you agree to our{' '}
+        <a
+          href="#"
+          className="text-purple-600 dark:text-purple-400 hover:underline"
+        >
+          Terms of Service
+        </a>{' '}
+        and{' '}
+        <a
+          href="#"
+          className="text-purple-600 dark:text-purple-400 hover:underline"
+        >
+          Privacy
+        </a>
+      </p>
     </div>
   );
 };
 
-// Define the InputFieldProps interface
-interface InputFieldProps {
-  id: string;
-  label: string;
-  type: string;
-  placeholder: string;
-  required?: boolean;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-const InputField: React.FC<InputFieldProps> = ({
-  id,
-  label,
-  type,
-  placeholder,
-  required = false,
-  value,
-  onChange,
-}) => {
-  return (
-    <div>
-      <label
-        htmlFor={id}
-        className="block text-sm font-medium mb-1 dark:text-zinc-200"
-      >
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-      <input
-        type={type}
-        id={id}
-        placeholder={placeholder}
-        className="w-full border border-zinc-300 dark:border-zinc-600 rounded-md px-3 py-2 text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-white outline-none"
-        value={value}
-        onChange={onChange}
-      />
+export const RegisterPage = () => (
+  <div
+    className="min-h-screen bg-cover bg-center bg-no-repeat bg-white dark:bg-zinc-900 flex flex-col"
+    style={{ backgroundImage: 'url(/assets/bg/background.png)' }}
+  >
+    <Navbar showMenu={false} showMenuMobile={false} />
+    <div className="flex-1 flex items-center justify-center p-4">
+      <RegisterCard />
     </div>
-  );
-};
+    <footer className="py-4 text-center">
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        &copy; Engramind 2025
+      </p>
+    </footer>
+  </div>
+);

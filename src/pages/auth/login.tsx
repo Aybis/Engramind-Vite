@@ -1,79 +1,12 @@
 'use client';
 
 import Navbar from '../../components/layout/Navbar';
-import { Mail } from 'lucide-react';
+import { LogIn, Apple } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { axiosBackend } from '../../utils/api';
 import Cookies from 'js-cookie';
-
-interface EmailInputProps {
-  form: { email: string; password: string };
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-const EmailInput = ({ form, handleChange }: EmailInputProps) => (
-  <form>
-    <label
-      htmlFor="email"
-      className="block text-sm font-medium mb-1 dark:text-zinc-200"
-    >
-      Your Email <span className="text-red-500">*</span>
-    </label>
-    <div className="flex gap-x-2 items-center border rounded-md px-3 py-2 mb-4 bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-600">
-      <Mail className="text-zinc-600 h-4" />
-      <input
-        type="email"
-        id="email"
-        placeholder="ava.wright@gmail.com"
-        className="w-full bg-transparent outline-none text-sm text-gray-900 dark:text-white"
-        value={form.email}
-        onChange={handleChange}
-      />
-    </div>
-    <label
-      htmlFor="password"
-      className="block text-sm font-medium mb-1 dark:text-zinc-200"
-    >
-      Your Password <span className="text-red-500">*</span>
-    </label>
-    <div className="flex items-center border rounded-md px-3 py-2 mb-4 bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-600">
-      <input
-        type="password"
-        id="password"
-        placeholder="********"
-        className="w-full bg-transparent outline-none text-sm text-gray-900 dark:text-white"
-        value={form.password}
-        onChange={handleChange}
-      />
-    </div>
-  </form>
-);
-
-const GoogleButton = () => (
-  <button
-    type="button"
-    className="w-full border cursor-pointer border-zinc-300 dark:border-zinc-600 py-2 rounded-md flex justify-center items-center text-sm font-medium text-gray-700 dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800 transition"
-  >
-    <img
-      src="/assets/google-icon.webp"
-      alt="Google"
-      width={20}
-      height={20}
-      className="w-5 h-5 mr-2"
-    />
-    Continue with Google
-  </button>
-);
-
-const TermsAndPrivacy = () => (
-  <p className="text-xs text-center mt-4 text-zinc-500 dark:text-zinc-400">
-    By joining, you agree to our{' '}
-    <span className="text-purple-600 hover:underline">Terms of Service</span>{' '}
-    and <span className="text-purple-600 hover:underline">Privacy</span>
-  </p>
-);
 
 const LoginCard = () => {
   const navigate = useNavigate();
@@ -81,39 +14,42 @@ const LoginCard = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.id]: e.target.value });
+    setForm((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
-  const handleLogin = async () => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (loading || !form.email || !form.password) return;
+
     setLoading(true);
-    const toastId = toast.loading(`Logging in...`, {
+    const toastId = toast.loading('Logging in...', {
       id: 'login',
       duration: Infinity,
     });
+
     try {
-      const response = await axiosBackend.post('/users/login', {
-        email: form.email,
-        password: form.password,
-      });
-      const result = response.data;
-      if (result?.success) {
-        Cookies.set('access_token', result?.accessToken, { expires: 1 });
-        Cookies.set('name', result?.name, { expires: 1 });
-        Cookies.set('refresh_token', result?.refreshToken, { expires: 1 });
-        Cookies.set('email', result?.email, { expires: 1 });
-        toast.success(`Successfully logged in!`, {
+      const { data } = await axiosBackend.post('/users/login', form);
+
+      if (data?.success) {
+        const cookieOptions = { expires: 1 };
+        Cookies.set('access_token', data.accessToken, cookieOptions);
+        Cookies.set('name', data.name, cookieOptions);
+        Cookies.set('refresh_token', data.refreshToken, cookieOptions);
+        Cookies.set('email', data.email, cookieOptions);
+
+        toast.success('Successfully logged in!', {
           id: toastId,
           duration: 4000,
         });
         navigate('/showcase');
       } else {
-        toast.error(result?.message, {
+        toast.error(data?.message || 'Login failed', {
           id: toastId,
           duration: 4000,
         });
       }
     } catch (error) {
-      toast.error(`Something went wrong. ${error?.toString()}`, {
+      toast.error(`Something went wrong. ${error}`, {
         id: toastId,
         duration: 4000,
       });
@@ -122,42 +58,136 @@ const LoginCard = () => {
     }
   };
 
+  const isDisabled = loading || !form.email || !form.password;
+
   return (
-    <div className="max-w-md w-full mt-[75px] md:mt-0 bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-zinc-200 dark:border-zinc-700 shadow-sm">
-      <h1 className="text-center text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-6">
-        <span className="">One sign-up.</span>
-        <br />
-        <span className="">A lifetime of impact.</span>
-      </h1>
-      <EmailInput form={form} handleChange={handleChange} />
-      <button
-        onClick={handleLogin}
-        disabled={loading || !form?.email || !form?.password}
-        className={[
-          'w-full bg-purple-500 text-white font-semibold py-2 rounded-md mb-4 text-center mt-4 transition-all duration-300',
-          loading || !form?.email || !form?.password
-            ? 'opacity-50 cursor-not-allowed hover:none'
-            : 'hover:bg-purple-600 cursor-pointer',
-        ].join(' ')}
-      >
-        {loading ? 'Logging in...' : 'Continue'}
-      </button>
-      <div className="text-center text-sm text-zinc-500 dark:text-zinc-400 mb-4 hidden">
-        Or continue with your preferred provider
+    <div className="w-full max-w-md bg-white/10 dark:bg-zinc-900/10 backdrop-blur-2xl p-10 rounded-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/10">
+      {/* Welcome back header */}
+      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-2">
+        <LogIn className="h-5 w-5" />
+        <span className="text-sm">Login.</span>
       </div>
-      {/* <GoogleButton /> */}
-      <TermsAndPrivacy />
+
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+        A lifetime of impact.
+      </h1>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Username/Email Input */}
+        <div>
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-600 focus:border-transparent transition-all"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Password Input */}
+        <div>
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            placeholder="••••••••"
+            className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-600 focus:border-transparent transition-all"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Forgot Password */}
+        <div className="text-right -mt-3">
+          <a
+            href="#"
+            className="text-xs text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:underline"
+          >
+            Forgot Password?
+          </a>
+        </div>
+
+        {/* Login Button */}
+        <button
+          type="submit"
+          disabled={isDisabled}
+          className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${
+            isDisabled
+              ? 'bg-purple-300/20 text-purple-500/60 cursor-not-allowed'
+              : 'bg-purple-600 text-white hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700 shadow-lg hover:shadow-xl cursor-pointer'
+          }`}
+        >
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
+
+        {/* Divider */}
+        <div className="relative flex items-center justify-center my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-200 dark:border-zinc-700"></div>
+          </div>
+          <div className="relative bg-white dark:bg-zinc-900 px-4">
+            <span className="text-sm text-gray-500 dark:text-gray-400">or</span>
+          </div>
+        </div>
+
+        {/* Sign Up Button */}
+        <button
+          type="button"
+          onClick={() => navigate('/auth/register')}
+          className="w-full cursor-pointer py-3 rounded-xl font-semibold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 border border-purple-200 dark:border-purple-800 transition-all duration-200"
+        >
+          Sign Up
+        </button>
+      </form>
+
+      {/* Terms and Privacy */}
+      <p className="text-xs text-center mt-6 text-gray-500 dark:text-gray-400">
+        By joining, you agree to our{' '}
+        <a
+          href="#"
+          className="text-purple-600 dark:text-purple-400 hover:underline"
+        >
+          Terms of Service
+        </a>{' '}
+        and{' '}
+        <a
+          href="#"
+          className="text-purple-600 dark:text-purple-400 hover:underline"
+        >
+          Privacy
+        </a>
+      </p>
     </div>
   );
 };
 
-export const LoginPage = () => {
-  return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 text-gray-800 font-sans">
-      <Navbar showMenu={false} />
-      <div className="flex justify-center items-center min-h-[calc(100vh-64px)] px-4">
-        <LoginCard />
-      </div>
+export const LoginPage = () => (
+  <div
+    className="min-h-screen bg-cover bg-center bg-no-repeat bg-white dark:bg-zinc-900 flex flex-col"
+    style={{ backgroundImage: 'url(/assets/bg/background.png)' }}
+  >
+    <Navbar showMenu={false} showMenuMobile={false} />
+    <div className="flex-1 flex items-center justify-center p-4">
+      <LoginCard />
     </div>
-  );
-};
+    <footer className="py-4 text-center">
+      <p className="text-sm text-purple-500 leading-relaxed">
+        &copy; Engramind 2025
+      </p>
+    </footer>
+  </div>
+);
