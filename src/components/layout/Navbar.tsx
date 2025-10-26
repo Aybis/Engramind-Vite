@@ -8,7 +8,7 @@ import RenderIf from '../../utils/RenderIf';
 
 type NavbarProps = {
   showMenu: boolean;
-  showMenuMobile: boolean;
+  showMenuMobile?: boolean;
 };
 
 export default function Navbar({
